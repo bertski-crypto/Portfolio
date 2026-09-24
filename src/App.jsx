@@ -89,7 +89,7 @@ function App() {
         </a>
         <nav className={menuOpen ? 'main-nav is-open' : 'main-nav'} aria-label="Primary navigation">
           {['about', 'projects', 'labs', 'skills', 'contact'].map((item) => <a key={item} href={`#${item}`} onClick={closeMenu}>{item}</a>)}
-          <a href="/resume/Albert-Resume.pdf" className="nav-resume"><Download size={14} /> resume</a>
+          <a href="#contact" className="nav-resume"><Download size={14} /> resume</a>
         </nav>
         <div className="header-actions">
           <button className="icon-button" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
@@ -108,7 +108,7 @@ function App() {
             <h1 id="hero-heading">HELLO,<br /><span>I'M ALBERT<span className="accent">.</span></span></h1>
             <p className="hero-lede">IT SUPPORT <span>/</span> NETWORKING <span>/</span> WEB DEVELOPMENT</p>
             <p className="hero-description">I build, troubleshoot, and develop practical IT solutions while continuously improving my skills in networking, system development, Linux, and modern web technologies.</p>
-            <div className="hero-actions"><a href="#projects" className="button button-primary">view my projects <ArrowUpRight size={17} /></a><a href="/resume/Albert-Resume.pdf" className="button button-quiet"><FileText size={16} /> download resume</a></div>
+            <div className="hero-actions"><a href="#projects" className="button button-primary">view my projects <ArrowUpRight size={17} /></a><a href="#contact" className="button button-quiet"><FileText size={16} /> request resume</a></div>
           </div>
           <div className="hero-aside">
             <div className="profile-visual">
