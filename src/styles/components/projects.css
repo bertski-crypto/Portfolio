@@ -76,6 +76,11 @@
   background: var(--glass-primary);
 }
 
+.filter-controls {
+  position: relative;
+  flex-shrink: 0;
+}
+
 .filter-panel {
   position: absolute;
   top: calc(100% + var(--sp-2));
@@ -84,6 +89,7 @@
   flex-direction: column;
   gap: var(--sp-1);
   min-width: 200px;
+  max-width: min(280px, 90vw);
   padding: var(--sp-3);
   background: var(--glass-primary);
   border: 1px solid var(--line);
@@ -129,13 +135,56 @@
   .projects-grid { grid-template-columns: 1fr; }
 }
 
+/* Grid slot — owns the reveal transform so the card fill is untouched */
+.project-card-slot {
+  display: flex;
+  min-width: 0;
+}
+
+/* Hover wrapper — owns the lift so the inner card keeps its layout box */
+.project-card-wrap {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+}
+
 /* Project Card */
 .project-card {
   display: flex;
   flex-direction: column;
+  width: 100%;
   min-height: 480px;
   padding: var(--sp-4);
 }
+
+/* search clear button */
+.search-clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.search-clear:hover { color: var(--text); }
+
+/* empty state */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--sp-7) var(--sp-4);
+  color: var(--muted);
+}
+
+.no-results p { margin: 0 0 var(--sp-3); }
 
 .project-card-header {
   display: flex;
@@ -247,12 +296,19 @@
   animation: fadeIn var(--t-fast) var(--ease);
 }
 
+/* motion wrapper created by <ProjectModal /> */
+.modal-shell {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 800px;
+}
+
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 .modal-content {
   position: relative;
   width: 100%;
-  max-width: 800px;
   max-height: 85vh;
   overflow-y: auto;
   background: var(--glass-primary);
@@ -261,12 +317,6 @@
   padding: var(--sp-6);
   backdrop-filter: blur(24px);
   box-shadow: var(--shadow-lift);
-  animation: slideUp var(--t-base) var(--ease);
-}
-
-@keyframes slideUp {
-  from { transform: translateY(24px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
 }
 
 .modal-close {

@@ -8,12 +8,14 @@
 
 .about-bento {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(12, 1fr);
   gap: var(--sp-3);
 }
 
 .about-card {
   padding: var(--sp-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
 }
 
 .about-card--bio {
@@ -21,21 +23,17 @@
   grid-row: span 2;
 }
 
-.about-card--focus {
-  grid-column: span 6;
-}
-
-.about-card--learning {
-  grid-column: span 6;
-}
+.about-card--focus { grid-column: span 6; }
+.about-card--learning { grid-column: span 6; }
 
 @media (max-width: 1199px) {
-  .about-card--bio { grid-column: span 6; grid-row: span 1; }
-  .about-card--focus { grid-column: span 3; }
-  .about-card--learning { grid-column: span 3; }
+  .about-card--bio { grid-column: span 12; grid-row: span 1; }
+  .about-card--focus { grid-column: span 6; }
+  .about-card--learning { grid-column: span 6; }
 }
 
 @media (max-width: 768px) {
+  .about-bento { grid-template-columns: 1fr; }
   .about-card--bio,
   .about-card--focus,
   .about-card--learning { grid-column: span 1; }
@@ -102,7 +100,7 @@
   background: var(--glass-primary);
 }
 
-.learning-icon {
+.about-card--learning .learning-icon {
   flex-shrink: 0;
   display: grid;
   place-items: center;

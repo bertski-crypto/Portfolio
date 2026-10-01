@@ -18,6 +18,7 @@
   padding: 0 var(--sp-4);
 }
 
+/* ---------- brand ---------- */
 .footer-brand {
   display: inline-flex;
   align-items: center;
@@ -30,17 +31,36 @@
   color: var(--text);
 }
 
-.footer-brand svg { color: var(--accent); }
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  color: var(--accent);
+  background: var(--glass-secondary);
+}
 
+.brand-dot { color: var(--accent); }
+
+/* ---------- tagline ---------- */
 .footer-tagline {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--muted);
   line-height: 1.6;
+  color: var(--muted);
 }
+
+/* ---------- links ---------- */
+.footer-links-slot { display: flex; }
 
 .footer-links {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--sp-2);
   list-style: none;
   padding: 0;
@@ -54,17 +74,28 @@
   padding: 6px 12px;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
+  background: var(--glass-secondary);
   font-family: var(--font-mono);
   font-size: 9px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
-  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  transition:
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease);
 }
 
-.footer-link:hover { color: var(--accent); border-color: var(--accent); }
+.footer-link:hover {
+  color: var(--accent);
+  border-color: var(--line-accent);
+  background: var(--glass-primary);
+}
 
+.footer-link-icon { display: inline-flex; }
+
+/* ---------- bottom bar ---------- */
 .footer-bottom {
   display: flex;
   flex-wrap: wrap;
@@ -72,8 +103,9 @@
   justify-content: space-between;
   gap: var(--sp-3);
   width: 100%;
-  margin-top: var(--sp-4);
-  padding-top: var(--sp-4);
+  max-width: var(--maxw);
+  margin: var(--sp-4) auto 0;
+  padding: var(--sp-4) var(--sp-4) 0;
   border-top: 1px solid var(--line);
   font-family: var(--font-mono);
   font-size: 9px;
@@ -94,9 +126,17 @@
 }
 
 .footer-top:hover { color: var(--accent); }
+.footer-top > span { display: inline-flex; }
 
 @media (max-width: 640px) {
-  .footer-inner { flex-direction: column; text-align: center; }
-  .footer-bottom { flex-direction: column; text-align: center; }
-  .footer-top { margin-left: auto; }
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--sp-2);
+  }
 }

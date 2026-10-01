@@ -1,0 +1,136 @@
+/* ==========================================================================
+   AMBIENT MOTION LAYER
+   Decorative only. Uses the existing theme tokens so it blends with the
+   current dark glassmorphism identity. Everything is disabled under
+   prefers-reduced-motion and cheap on mobile.
+   ========================================================================== */
+
+.ambient-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ---------- grid ---------- */
+.ambient-layer .ambient-grid {
+  position: absolute;
+  inset: -40px;
+  opacity: 0.5;
+}
+
+/* ---------- orbs ---------- */
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  will-change: transform;
+}
+
+.ambient-blob--a {
+  width: 520px;
+  height: 520px;
+  top: 8%;
+  left: -120px;
+  background: var(--ambient-a);
+}
+
+.ambient-blob--b {
+  width: 420px;
+  height: 420px;
+  bottom: 4%;
+  right: -100px;
+  background: var(--ambient-b);
+}
+
+.ambient-blob--c {
+  width: 600px;
+  height: 600px;
+  top: 45%;
+  left: 45%;
+  background: var(--ambient-c);
+  opacity: 0.4;
+}
+
+/* ---------- particles ---------- */
+.ambient-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.ambient-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 40%, transparent);
+  will-change: transform;
+}
+
+/* ---------- cursor light ---------- */
+.ambient-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 420px;
+  margin: -210px 0 0 -210px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--accent) 12%, transparent) 0%,
+    transparent 62%
+  );
+  filter: blur(30px);
+  will-change: transform;
+}
+
+/* ---------- scroll progress ---------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 200;
+  pointer-events: none;
+  background: var(--accent-grad);
+  transform-origin: 0 50%;
+}
+
+/* ---------- hero glass reflection ---------- */
+.glass-reflection {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.07) 50%,
+    transparent 62%
+  );
+  transform: translateX(-100%);
+  will-change: transform;
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-layer .ambient-grid { transform: none !important; }
+  .ambient-particle,
+  .ambient-cursor { display: none; }
+  .ambient-blob {
+    transform: none !important;
+    opacity: 0.35;
+  }
+  .scroll-progress { display: none; }
+}
+
+/* ---------- small screens ---------- */
+@media (max-width: 768px) {
+  .ambient-blob--c { display: none; }
+  .ambient-cursor { display: none; }
+  .ambient-blob {
+    filter: blur(90px);
+    opacity: 0.5;
+  }
+}

@@ -1,54 +1,99 @@
-import { ArrowUpRight, Cpu } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowUp, Cpu } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { SiGmail } from 'react-icons/si';
+
 import { footerLinks, siteConfig } from '../data/socials';
+import {
+  Reveal,
+  Stagger,
+  StaggerItem,
+  hoverIconShift,
+  hoverSocial,
+  tapSoft,
+} from '../utils/motion-primitives';
 import '../styles/components/footer.css';
 
 const socialIcons = { FaGithub, FaLinkedin, SiGmail };
+
+// footerLinks are keyed by human label — map them to the icon components.
+// Never index socialIcons[label] directly or Icon will be undefined.
+const ICON_BY_LABEL = {
+  GitHub: FaGithub,
+  LinkedIn: FaLinkedin,
+  Email: SiGmail,
+};
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="footer" role="contentinfo">
-      <div className="footer-inner">
-        <div className="footer-brand">
-          <span className="brand-mark" aria-hidden="true">
+      <Stagger className="footer-inner" gap={0.1}>
+        <StaggerItem className="footer-brand">
+          <motion.span
+            className="brand-mark"
+            aria-hidden="true"
+            whileHover={{ scale: 1.08, rotate: 90 }}
+            transition={{ duration: 0.3 }}
+          >
             <Cpu size={17} />
+          </motion.span>
+          <span>
+            {siteConfig.name}
+            <span className="brand-dot">.</span>IT
           </span>
-          <span>{siteConfig.name}<span className="brand-dot">.</span>IT</span>
-        </div>
+        </StaggerItem>
 
-        <div className="footer-tagline">
-          {siteConfig.title}<br />
-          {siteConfig.tagline}
-        </div>
+        <StaggerItem className="footer-tagline">
+          <span>{siteConfig.title}</span>
+          <span>{siteConfig.tagline}</span>
+        </StaggerItem>
 
-        <ul className="footer-links" role="list" aria-label="Footer navigation">
-          {footerLinks.map(({ label, href, external }) => {
-            const Icon = socialIcons[label === 'GitHub' ? 'FaGithub' : label === 'LinkedIn' ? 'FaLinkedin' : 'SiGmail'];
-            return (
-              <li key={label}>
-                <a
-                  href={href}
-                  className="footer-link"
-                  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                >
-                  <Icon size={16} aria-hidden="true" />
-                  {label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+        <StaggerItem className="footer-links-slot">
+          <ul className="footer-links" aria-label="Footer navigation">
+            {footerLinks.map(({ label, href, external }) => {
+              const Icon = ICON_BY_LABEL[label] ?? socialIcons.FaGithub;
+              return (
+                <li key={label}>
+                  <motion.a
+                    href={href}
+                    className="footer-link"
+                    whileHover={hoverSocial}
+                    whileTap={tapSoft}
+                    {...(external
+                      ? { target: '_blank', rel: 'noopener noreferrer' }
+                      : {})}
+                  >
+                    <span className="footer-link-icon" aria-hidden="true">
+                      <Icon size={15} />
+                    </span>
+                    {label}
+                  </motion.a>
+                </li>
+              );
+            })}
+          </ul>
+        </StaggerItem>
+      </Stagger>
 
-      <div className="footer-bottom">
-        <span className="footer-copyright">© {year} {siteConfig.name}</span>
-        <a href="#top" className="footer-top">
-          back to top <ArrowUpRight size={12} aria-hidden="true" />
-        </a>
-      </div>
+      <Reveal kind="lead" className="footer-bottom" delay={0.05}>
+        <span className="footer-copyright">
+          © {year} {siteConfig.name}
+        </span>
+
+        <motion.a
+          href="#top"
+          className="footer-top"
+          whileHover={{ y: -2 }}
+          whileTap={tapSoft}
+        >
+          back to top
+          <motion.span variants={hoverIconShift(0, -2)}>
+            <ArrowUp size={12} aria-hidden="true" />
+          </motion.span>
+        </motion.a>
+      </Reveal>
     </footer>
   );
 }

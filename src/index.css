@@ -10,7 +10,11 @@
 @import './styles/components/projects.css';
 @import './styles/components/skills.css';
 @import './styles/components/labs.css';
+@import './styles/components/experience.css';
+@import './styles/components/education.css';
+@import './styles/components/learning.css';
 @import './styles/components/certifications.css';
+@import './styles/components/ambient.css';
 @import './styles/components/resume.css';
 @import './styles/components/contact.css';
 @import './styles/components/footer.css';
@@ -30,10 +34,37 @@
   padding: 0 var(--sp-4);
 }
 
+/* Every section's inner grid is centred and width-capped so wide viewports
+   never stretch the layout edge to edge. */
 .section-wrap > .container,
-.section-wrap > .bento {
+.section-wrap > .bento,
+.section-wrap > .about-bento,
+.section-wrap > .skills-bento,
+.section-wrap > .labs-summary,
+.section-wrap > .labs-grid,
+.section-wrap > .projects-toolbar,
+.section-wrap > .projects-grid,
+.section-wrap > .no-results,
+.section-wrap > .experience-grid,
+.section-wrap > .education-grid,
+.section-wrap > .learning-grid,
+.section-wrap > .learning-legend,
+.section-wrap > .cert-bento,
+.section-wrap > .contact-bento {
   max-width: var(--maxw);
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Headers: centre the block, but keep the text at a readable measure. */
+.section-wrap > .section-header {
+  max-width: var(--maxw);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-wrap > .section-header > * {
+  max-width: 720px;
 }
 
 /* Active section highlight for scrollspy */

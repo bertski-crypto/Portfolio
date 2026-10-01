@@ -1,149 +1,224 @@
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Mail, Send, Check, ExternalLink } from 'lucide-react';
-import { socialLinks } from '../data/socials';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { SiGmail } from 'react-icons/si';
+
+import { socialLinks } from '../data/socials';
+import {
+  Reveal,
+  SectionHeader,
+  Stagger,
+  StaggerItem,
+  hoverCard,
+  hoverIconShift,
+  hoverIconPop,
+  hoverPrimary,
+  hoverSocial,
+  hoverSoft,
+  tapSoft,
+} from '../utils/motion-primitives';
 import '../styles/components/contact.css';
-import '../styles/components/bento.css';
 
 const socialIcons = { FaGithub, FaLinkedin, SiGmail };
 
 export default function Contact() {
-  const [formState, setFormState] = useState({ name: '', email: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sent, setSent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [busy, setBusy] = useState(false);
 
-  const updateForm = (e) => {
+  const update = (e) => {
     setSent(false);
-    setFormState({ ...formState, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const submitForm = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (!formState.name || !formState.email || !formState.message) return;
-    if (!formState.email.includes('@')) return;
+    if (!form.name || !form.email || !form.message) return;
+    if (!form.email.includes('@')) return;
 
-    setSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setSubmitting(false);
+    setBusy(true);
+    await new Promise((r) => setTimeout(r, 900));
+    setBusy(false);
     setSent(true);
-    setFormState({ name: '', email: '', message: '' });
+    setForm({ name: '', email: '', message: '' });
   };
 
   return (
     <section id="contact" className="contact section-wrap" aria-labelledby="contact-heading">
-      <div className="section-header">
-        <div className="kicker">
-          <span>09</span>
-          <span>open channel</span>
-        </div>
-        <h2 id="contact-heading" className="heading-lg">Let&apos;s work<br /><em>together.</em></h2>
-        <p className="muted">
-          I'm open to discussing IT opportunities, technical projects, internships,
-          junior roles, and collaboration.
-        </p>
-      </div>
-
-      <div className="bento contact-bento">
-        <article className="bento-item contact-info glass-card">
-          <div className="contact-email">
-            <Mail size={18} aria-hidden="true" style={{ color: 'var(--accent)' }} />
-            <span>humanperson0816@gmail.com</span>
+      <SectionHeader className="section-header">
+        <Reveal kind="heading" as="div">
+          <div className="kicker">
+            <span>09</span>
+            <span>open channel</span>
           </div>
+          <h2 id="contact-heading" className="heading-lg">
+            Let&apos;s work
+            <br />
+            <em>together.</em>
+          </h2>
+        </Reveal>
+        <Reveal kind="lead" as="p" delay={0.08} className="muted">
+          I'm open to discussing IT opportunities, technical projects,
+          internships, junior roles, and collaboration.
+        </Reveal>
+      </SectionHeader>
 
-          <div className="contact-links" role="list" aria-label="Contact links">
-            {socialLinks.map(({ label, icon: IconName, href, external, ariaLabel }) => {
-              const Icon = socialIcons[IconName];
-              return (
-                <a
-                  key={label}
-                  href={href}
-                  className="contact-link"
-                  aria-label={ariaLabel}
-                  role="listitem"
-                  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                >
-                  <span className="contact-link-icon" aria-hidden="true">
-                    <Icon size={20} />
-                  </span>
-                  <span>{label}</span>
-                  {external && <ExternalLink className="contact-link-external" size={13} aria-hidden="true" />}
-                </a>
-              );
-            })}
-          </div>
-        </article>
-
-        <article className="bento-item contact-form-card glass-card">
-          <form className="contact-form" onSubmit={submitForm} noValidate>
-            <div className="form-row">
-              <label htmlFor="name">
-                Name
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={formState.name}
-                  onChange={updateForm}
-                  placeholder="Your name"
-                  required
-                  autoComplete="name"
-                />
-              </label>
-              <label htmlFor="email">
-                Email
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formState.email}
-                  onChange={updateForm}
-                  placeholder="you@example.com"
-                  required
-                  autoComplete="email"
-                />
-              </label>
-            </div>
-            <label htmlFor="message">
-              Message
-              <textarea
-                id="message"
-                name="message"
-                value={formState.message}
-                onChange={updateForm}
-                placeholder="Tell me a little about the opportunity..."
-                rows="4"
-                required
-              />
-            </label>
-            <button
-              type="submit"
-              className="btn btn-primary form-submit"
-              disabled={submitting}
-              aria-busy={submitting}
+      <Stagger className="contact-bento" gap={0.12}>
+        {/* ---------------------- info card ---------------------- */}
+        <StaggerItem className="contact-slot contact-slot--info">
+          <motion.aside
+            className="contact-info glass-card"
+            aria-label="Contact channels"
+            whileHover={hoverCard}
+          >
+            <motion.a
+              className="contact-email"
+              href="mailto:humanperson0816@gmail.com"
+              whileHover={hoverSoft}
+              whileTap={tapSoft}
             >
-              {submitting ? (
-                <>
-                  <svg className="spinner" viewBox="0 0 24 24" aria-hidden="true" style={{ width: 18, height: 18, animation: 'spin 1s linear infinite' }}>
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none" strokeDasharray="31.4 31.4" strokeLinecap="round" />
-                  </svg>
-                  Sending...
-                </>
-              ) : (
-                <>
-                  SEND MESSAGE <Send size={17} aria-hidden="true" />
-                </>
+              <Mail size={18} aria-hidden="true" />
+              <span>humanperson0816@gmail.com</span>
+            </motion.a>
+
+            <Stagger className="contact-links" gap={0.08} role="list">
+              {socialLinks.map(({ label, icon: IconName, href, external, ariaLabel }) => {
+                const Icon = socialIcons[IconName];
+                return (
+                  <StaggerItem key={label} as="div">
+                    <motion.a
+                      href={href}
+                      className="contact-link"
+                      aria-label={ariaLabel}
+                      role="listitem"
+                      whileHover={hoverSocial}
+                      whileTap={tapSoft}
+                      {...(external
+                        ? { target: '_blank', rel: 'noopener noreferrer' }
+                        : {})}
+                    >
+                      <motion.span
+                        className="contact-link-icon"
+                        aria-hidden="true"
+                        whileHover={hoverIconPop(1.06, -2)}
+                      >
+                        <Icon size={20} />
+                      </motion.span>
+                      <span>{label}</span>
+                      {external && (
+                        <motion.span
+                          className="contact-link-arrow"
+                          variants={hoverIconShift(3)}
+                          aria-hidden="true"
+                        >
+                          <ExternalLink size={13} />
+                        </motion.span>
+                      )}
+                    </motion.a>
+                  </StaggerItem>
+                );
+              })}
+            </Stagger>
+          </motion.aside>
+        </StaggerItem>
+
+        {/* ---------------------- form card ---------------------- */}
+        <StaggerItem className="contact-slot contact-slot--form">
+          <motion.div className="contact-form-card glass-card" whileHover={hoverCard}>
+            <form className="contact-form" onSubmit={submit} noValidate>
+              <Stagger className="form-row" gap={0.08}>
+                <StaggerItem className="form-field">
+                  <label htmlFor="name">
+                    Name
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={form.name}
+                      onChange={update}
+                      placeholder="Your name"
+                      required
+                      autoComplete="name"
+                    />
+                  </label>
+                </StaggerItem>
+
+                <StaggerItem className="form-field">
+                  <label htmlFor="email">
+                    Email
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={update}
+                      placeholder="you@example.com"
+                      required
+                      autoComplete="email"
+                    />
+                  </label>
+                </StaggerItem>
+              </Stagger>
+
+              <Reveal kind="item" delay={0.16}>
+                <label className="form-field" htmlFor="message">
+                  Message
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={form.message}
+                    onChange={update}
+                    placeholder="Tell me a little about the opportunity..."
+                    rows="4"
+                    required
+                  />
+                </label>
+              </Reveal>
+
+              <Reveal kind="item" delay={0.22}>
+                <motion.button
+                  type="submit"
+                  className="btn btn-primary form-submit"
+                  disabled={busy}
+                  aria-busy={busy}
+                  whileHover={hoverPrimary}
+                  whileTap={tapSoft}
+                >
+                  {busy ? (
+                    <>
+                      <span className="spinner" aria-hidden="true" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      SEND MESSAGE
+                      <motion.span variants={hoverIconShift(4)}>
+                        <Send size={17} aria-hidden="true" />
+                      </motion.span>
+                    </>
+                  )}
+                </motion.button>
+              </Reveal>
+
+              {sent && (
+                <motion.p
+                  className="form-success"
+                  role="status"
+                  aria-live="polite"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.28 }}
+                >
+                  <Check size={15} aria-hidden="true" />
+                  Thanks for reaching out. This frontend form is ready to connect
+                  to a backend service.
+                </motion.p>
               )}
-            </button>
-            {sent && (
-              <p className="form-success" role="status" aria-live="polite">
-                <Check size={15} aria-hidden="true" />
-                Thanks for reaching out. This frontend form is ready to connect to a backend service.
-              </p>
-            )}
-          </form>
-        </article>
-      </div>
+            </form>
+          </motion.div>
+        </StaggerItem>
+      </Stagger>
     </section>
   );
 }

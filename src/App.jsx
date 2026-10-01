@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
+import Ambient from './components/Ambient';
+import ScrollProgress from './components/ScrollProgress';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -69,10 +71,8 @@ export default function App() {
 
   return (
     <div className="site-shell">
-      <div className="ambient-grid" aria-hidden="true" />
-      <div className="ambient-blob ambient-blob--a" aria-hidden="true" />
-      <div className="ambient-blob ambient-blob--b" aria-hidden="true" />
-      <div className="ambient-blob ambient-blob--c" aria-hidden="true" />
+      <Ambient />
+      <ScrollProgress />
 
       <Navbar
         theme={theme}

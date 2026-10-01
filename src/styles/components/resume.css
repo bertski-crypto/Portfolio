@@ -11,9 +11,9 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: var(--sp-7) var(--sp-6);
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
+  padding: var(--sp-7) var(--sp-6);
 }
 
 .resume-icon {
@@ -28,37 +28,56 @@
   margin-bottom: var(--sp-5);
 }
 
-.resume-card h2 {
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  margin: 0 0 var(--sp-2);
+.resume-lede {
+  margin: 0 0 var(--sp-5);
+  max-width: 480px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
 }
 
-.resume-card > .muted { max-width: 480px; margin-bottom: var(--sp-6); }
-
+/* ---------- actions ---------- */
 .resume-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--sp-3);
   justify-content: center;
-  margin-bottom: var(--sp-6);
+  margin-bottom: var(--sp-4);
 }
 
+.resume-action { display: inline-flex; }
+
+/* ---------- placeholder ---------- */
 .resume-placeholder {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: var(--sp-4);
   width: 100%;
+  margin-bottom: var(--sp-4);
 }
+
+.resume-placeholder h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.resume-placeholder > p {
+  margin: 0;
+  max-width: 480px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.resume-placeholder a { color: var(--accent); }
 
 .placeholder-status {
   display: flex;
   flex-direction: column;
   gap: var(--sp-2);
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
+  margin: 0 auto;
 }
 
 .status-item {
@@ -68,17 +87,20 @@
   padding: var(--sp-2) var(--sp-3);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
+  background: var(--glass-secondary);
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--muted);
-  background: var(--glass-secondary);
 }
 
 .status-item svg { flex-shrink: 0; }
+.status-icon--muted { color: var(--muted); }
+.status-icon--ok { color: var(--ok); }
 
+/* ---------- plain-text summary ---------- */
 .resume-summary {
   width: 100%;
-  margin-top: var(--sp-4);
+  margin-top: var(--sp-3);
 }
 
 .resume-summary summary {
@@ -93,12 +115,14 @@
   letter-spacing: 0.08em;
   color: var(--accent);
   cursor: pointer;
+  list-style: none;
   transition: gap var(--t-fast) var(--ease);
 }
 
-.resume-summary summary:hover { gap: 12px; }
 .resume-summary summary::-webkit-details-marker { display: none; }
 .resume-summary summary::marker { display: none; }
+.resume-summary summary:hover { gap: 12px; }
+.resume-summary summary > span { display: inline-flex; }
 
 .resume-text {
   margin-top: var(--sp-4);
@@ -107,6 +131,7 @@
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   overflow-x: auto;
+  text-align: left;
 }
 
 .resume-text pre {

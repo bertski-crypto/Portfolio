@@ -332,69 +332,20 @@ button { cursor: pointer; background: none; border: none; }
 .badge--muted { background: rgba(255, 255, 255, 0.05); color: var(--muted); border: 1px solid var(--line); }
 
 /* ==========================================================================
-   GRID PATTERN BACKGROUND (ambient)
+   AMBIENT BACKDROP
+   Grid + glow orbs + particles + cursor light are rendered by
+   <Ambient /> (src/components/Ambient.jsx) and styled in
+   styles/components/ambient.css, which owns those selectors now.
+
+   The grid paint is kept here so it inherits the theme mask.
    ========================================================================== */
 
-.ambient-grid {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.5;
+.ambient-layer .ambient-grid {
   background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, black 30%, transparent 70%);
-}
-
-/* ==========================================================================
-   RADIAL GLOW AMBIENTS
-   ========================================================================== */
-
-.ambient-blob {
-  position: fixed;
-  pointer-events: none;
-  z-index: -1;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0;
-  animation: ambient-drift 28s ease-in-out infinite alternate;
-}
-
-.ambient-blob--a {
-  width: 520px; height: 520px;
-  top: 10%; left: -120px;
-  background: var(--ambient-a);
-  animation-delay: 0s;
-}
-
-.ambient-blob--b {
-  width: 420px; height: 420px;
-  bottom: 5%; right: -100px;
-  background: var(--ambient-b);
-  animation-delay: -7s;
-}
-
-.ambient-blob--c {
-  width: 600px; height: 600px;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--ambient-c);
-  animation-delay: -14s;
-  opacity: 0.4;
-}
-
-@keyframes ambient-drift {
-  0% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(40px, -30px) scale(1.05); }
-  50% { transform: translate(-20px, 50px) scale(0.98); }
-  75% { transform: translate(30px, 40px) scale(1.03); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ambient-blob { animation: none; opacity: 0.35; }
 }
 
 /* ==========================================================================

@@ -8,9 +8,11 @@
 
 .cert-bento {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(12, 1fr);
   gap: var(--sp-3);
 }
+
+.cert-bento > * { grid-column: span 12; }
 
 .cert-card {
   display: flex;
@@ -19,14 +21,10 @@
   padding: var(--sp-5);
 }
 
-.cert-card--featured { grid-column: span 12; }
+.cert-card--featured { height: 100%; }
 
 @media (max-width: 1199px) {
-  .cert-card--featured { grid-column: span 6; }
-}
-
-@media (max-width: 768px) {
-  .cert-card--featured { grid-column: span 1; }
+  .cert-bento > * { grid-column: span 12; }
 }
 
 .cert-header {
@@ -100,6 +98,12 @@
   font-size: 13px;
   color: var(--text-dim);
   word-break: break-word;
+}
+
+.cert-detail-value--id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  word-break: break-all;
 }
 
 .cert-footer {

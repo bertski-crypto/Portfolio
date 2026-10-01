@@ -1,57 +1,125 @@
+import { motion } from 'framer-motion';
 import { Wrench, Network, Code2, Terminal, Container } from 'lucide-react';
+
 import { skillGroups, toolIcons } from '../data/skills';
+import {
+  Reveal,
+  SectionHeader,
+  Stagger,
+  StaggerItem,
+  hoverCardSoft,
+  hoverIconPop,
+  hoverSoft,
+  tapSoft,
+} from '../utils/motion-primitives';
+
 import '../styles/components/skills.css';
 import '../styles/components/bento.css';
 
 const skillIcons = { Wrench, Network, Code2, Terminal, Container };
 
+/* ------------------------------------------------------------------ */
+/*  Tool chip                                                          */
+/* ------------------------------------------------------------------ */
+function ToolTag({ tool }) {
+  return (
+    <motion.span
+      className="tool-tag"
+      role="listitem"
+      whileHover={hoverSoft}
+      whileTap={tapSoft}
+    >
+      {tool.name}
+    </motion.span>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Skill category card                                                */
+/* ------------------------------------------------------------------ */
+function SkillCategory({ group }) {
+  const Icon = skillIcons[group.icon] || Code2;
+
+  return (
+    <article className="skill-category">
+      <h4>
+        <motion.span
+          className="skill-icon"
+          aria-hidden="true"
+          whileHover={hoverIconPop(1.08, -2)}
+        >
+          <Icon size={16} />
+        </motion.span>
+        {group.label}
+      </h4>
+
+      <ul>
+        {group.items.map((item) => (
+          <motion.li key={item} whileHover={hoverSoft} whileTap={tapSoft}>
+            {item}
+          </motion.li>
+        ))}
+      </ul>
+
+      <p className="skill-level">{group.level}</p>
+    </article>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Section                                                            */
+/* ------------------------------------------------------------------ */
 export default function Skills() {
   return (
     <section id="skills" className="skills section-wrap" aria-labelledby="skills-heading">
-      <div className="section-header">
-        <div className="kicker">
-          <span>04</span>
-          <span>technical toolkit</span>
-        </div>
-        <h2 id="skills-heading" className="heading-lg">Tools I use to<br /><em>make things work.</em></h2>
-        <p className="muted">A growing toolkit grounded in fundamentals. Skill levels are intentionally described honestly.</p>
-      </div>
+      <SectionHeader className="section-header">
+        <Reveal kind="heading" as="div">
+          <div className="kicker">
+            <span>04</span>
+            <span>technical toolkit</span>
+          </div>
+          <h2 id="skills-heading" className="heading-lg">
+            Tools I use to
+            <br />
+            <em>make things work.</em>
+          </h2>
+        </Reveal>
+        <Reveal kind="lead" as="p" delay={0.08} className="muted">
+          A growing toolkit grounded in fundamentals. Skill levels are
+          intentionally described honestly.
+        </Reveal>
+      </SectionHeader>
 
-      <div className="bento skills-bento">
-        <article className="bento-item skill-category skill-category--tools glass-card">
+      <Stagger className="skills-bento" gap={0.1}>
+        {/* tools card — spans full width */}
+        <StaggerItem className="skill-category skill-category--tools glass-card">
           <div className="tools-header">
             <h3>Development Environment</h3>
             <p>Daily drivers for development and learning</p>
           </div>
-          <div className="tools-cloud" role="list" aria-label="Tools and technologies">
-            {toolIcons.map((tool) => (
-              <span key={tool.name} className="tool-tag" role="listitem">
-                {tool.name}
-              </span>
-            ))}
-          </div>
-        </article>
 
-        {skillGroups.map((group) => {
-          const Icon = skillIcons[group.icon] || Code2;
-          return (
-            <article key={group.label} className="bento-item skill-category skill-category--group glass-card">
-              <h4>
-                <Icon size={16} aria-hidden="true" />
-                {group.label}
-              </h4>
-              <ul>
-                {group.items.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-              <p className="muted" style={{ marginTop: 'var(--sp-3)', fontSize: '11px', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                {group.level}
-              </p>
-            </article>
-          );
-        })}
-      </div>
+          <Stagger className="tools-cloud" gap={0.035} role="list">
+            {toolIcons.map((tool) => (
+              <StaggerItem key={tool.name} as="div">
+                <ToolTag tool={tool} />
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </StaggerItem>
+
+        {/* skill groups */}
+        {skillGroups.map((group) => (
+          <StaggerItem key={group.label} className="skill-card-slot">
+            <motion.div
+              className="skill-card-hover"
+              whileHover={hoverCardSoft}
+              whileTap={tapSoft}
+            >
+              <SkillCategory group={group} />
+            </motion.div>
+          </StaggerItem>
+        ))}
+      </Stagger>
     </section>
   );
 }
