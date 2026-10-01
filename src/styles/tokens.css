@@ -1,0 +1,116 @@
+/* ==========================================================================
+   DESIGN TOKENS
+   Single source of truth for colour, type, radius, spacing and motion.
+   ========================================================================== */
+
+:root {
+  /* Type */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  /* Spacing scale — 8px base, no arbitrary values below this */
+  --sp-1: 8px;
+  --sp-2: 12px;
+  --sp-3: 16px;
+  --sp-4: 24px;
+  --sp-5: 32px;
+  --sp-6: 48px;
+  --sp-7: 64px;
+  --sp-8: 96px;
+
+  /* Radius */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Motion — brief specifies 150–300ms */
+  --t-fast: 160ms;
+  --t-base: 220ms;
+  --t-slow: 300ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Layout */
+  --maxw: 1240px;
+  --nav-h: 68px;
+}
+
+/* ---------- Dark (primary) ---------- */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #07090c;
+  --bg-elevated: #0b0e14;
+
+  /* Glass surfaces — deliberately varied for hierarchy */
+  --glass-primary: rgba(255, 255, 255, 0.06);
+  --glass-secondary: rgba(255, 255, 255, 0.035);
+  --glass-solid: rgba(10, 13, 19, 0.86);
+
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --line-accent: rgba(77, 163, 255, 0.45);
+
+  --text: #f2f5f9;
+  --text-dim: #b6c0cf;
+  --muted: #8d99ab;
+
+  /* One accent system: blue → cyan → violet */
+  --accent: #4da3ff;
+  --accent-cyan: #5de4ff;
+  --accent-violet: #8b7cff;
+  --accent-grad: linear-gradient(135deg, rgba(77, 163, 255, 0.95), rgba(139, 124, 255, 0.95));
+  --accent-soft: rgba(77, 163, 255, 0.12);
+
+  --ok: #34d399;
+  --warn: #f0b866;
+
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  --shadow-lift: 0 26px 70px rgba(0, 0, 0, 0.38);
+  --glow: 0 0 0 1px rgba(77, 163, 255, 0.22), 0 18px 48px rgba(77, 163, 255, 0.12);
+
+  --ambient-a: rgba(77, 163, 255, 0.16);
+  --ambient-b: rgba(139, 124, 255, 0.14);
+  --ambient-c: rgba(93, 228, 255, 0.07);
+  --grid-line: rgba(255, 255, 255, 0.032);
+}
+
+/* ---------- Light (preserved, redesigned) ---------- */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #eef1f6;
+  --bg-elevated: #ffffff;
+
+  --glass-primary: rgba(255, 255, 255, 0.72);
+  --glass-secondary: rgba(255, 255, 255, 0.45);
+  --glass-solid: rgba(255, 255, 255, 0.88);
+
+  --line: rgba(15, 23, 42, 0.1);
+  --line-strong: rgba(15, 23, 42, 0.2);
+  --line-accent: rgba(37, 99, 235, 0.4);
+
+  --text: #0d1524;
+  --text-dim: #334155;
+  --muted: #5a6b83;
+
+  --accent: #2563eb;
+  --accent-cyan: #0891b2;
+  --accent-violet: #7c3aed;
+  --accent-grad: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(124, 58, 237, 0.95));
+  --accent-soft: rgba(37, 99, 235, 0.09);
+
+  --ok: #059669;
+  --warn: #b45309;
+
+  --shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
+  --shadow-lift: 0 26px 60px rgba(15, 23, 42, 0.16);
+  --glow: 0 0 0 1px rgba(37, 99, 235, 0.2), 0 18px 44px rgba(37, 99, 235, 0.1);
+
+  --ambient-a: rgba(37, 99, 235, 0.12);
+  --ambient-b: rgba(124, 58, 237, 0.1);
+  --ambient-c: rgba(8, 145, 178, 0.06);
+  --grid-line: rgba(15, 23, 42, 0.04);
+}

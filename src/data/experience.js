@@ -81,19 +81,9 @@ export const education = [
   },
 ];
 
-export const certifications = [
-  // Add actual certifications here when obtained
-  // Example structure:
-  // {
-  //   id: 'ccna',
-  //   name: 'Cisco Certified Network Associate (CCNA)',
-  //   issuer: 'Cisco',
-  //   date: '2026',
-  //   credentialId: 'XXXXXXXX',
-  //   status: 'IN PROGRESS',
-  //   url: 'https://www.credly.com/...',
-  // },
-];
+// Verified certifications live in their own module. Re-exported here so any
+// existing `from './data/experience'` import keeps working.
+export { certifications, getVerifiedCertifications } from './certifications';
 
 export const currentlyLearning = [
   {

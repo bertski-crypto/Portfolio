@@ -1,9 +1,12 @@
 export const networkingLabs = [
   {
     id: 'ip-addressing',
+    number: '01',
     name: 'IP ADDRESSING',
     icon: 'Globe2',
     status: 'IN PROGRESS',
+    summary: 'IPv4 structure, address classes, and private ranges.',
+    detail: 'Reading and assigning IPv4 addresses on Windows and Linux, and confirming subnet masks and gateways from the CLI.',
     objective: 'Understand IPv4 address structure, classes, public vs private ranges, default gateways, and network boundaries.',
     tools: ['Cisco Packet Tracer', 'Windows CLI (ipconfig)', 'Linux CLI (ip addr, ifconfig)', 'Online subnet calculators'],
     configuration: [
@@ -23,9 +26,12 @@ export const networkingLabs = [
   },
   {
     id: 'subnetting',
+    number: '02',
     name: 'SUBNETTING',
     icon: 'Network',
     status: 'LEARNING',
+    summary: 'CIDR notation and subnet math, verified against ipcalc.',
+    detail: 'Calculating network, broadcast, and usable-host ranges, then confirming the results against a calculator and in the lab.',
     objective: 'Break networks into manageable segments using CIDR notation and subnet masks. Calculate network/broadcast addresses, usable hosts, and subnet increments.',
     tools: ['Cisco Packet Tracer', 'Manual calculation practice', 'Subnet calculator verification', 'Linux ipcalc'],
     configuration: [
@@ -45,9 +51,12 @@ export const networkingLabs = [
   },
   {
     id: 'dhcp-dns',
+    number: '03',
     name: 'DHCP & DNS',
     icon: 'Server',
     status: 'LEARNING',
+    summary: 'Automatic address assignment and name resolution in the lab.',
+    detail: 'Configuring DHCP pools and options, standing up DNS records, and verifying the DORA lease process and lookups.',
     objective: 'Understand the services that make networks usable: automatic address assignment (DHCP) and name resolution (DNS).',
     tools: ['Cisco Packet Tracer', 'Windows Server DHCP/DNS roles (lab)', 'Linux dnsmasq / bind9', 'dig, nslookup, host commands'],
     configuration: [
@@ -67,9 +76,12 @@ export const networkingLabs = [
   },
   {
     id: 'routing',
+    number: '04',
     name: 'ROUTING',
     icon: 'Share2',
     status: 'PLANNED',
+    summary: 'Static routes plus RIP and OSPF, not yet started.',
+    detail: 'Planned phase: static and dynamic routing between networks, with convergence and routing-table verification.',
     objective: 'Configure static routes and dynamic routing protocols (RIP, OSPF) to enable inter-network communication.',
     tools: ['Cisco Packet Tracer', 'GNS3 (planned)', 'Linux ip route'],
     configuration: [
@@ -89,9 +101,12 @@ export const networkingLabs = [
   },
   {
     id: 'switching-vlan',
+    number: '05',
     name: 'SWITCHING & VLAN',
     icon: 'GitBranch',
     status: 'PLANNED',
+    summary: 'Segmentation, trunking, and inter-VLAN routing.',
+    detail: 'Planned phase: creating VLANs, carrying them over 802.1Q trunks, and testing inter-VLAN connectivity.',
     objective: 'Implement VLANs, trunking, and inter-VLAN routing for network segmentation.',
     tools: ['Cisco Packet Tracer', 'GNS3 (planned)'],
     configuration: [
@@ -111,9 +126,12 @@ export const networkingLabs = [
   },
   {
     id: 'linux-networking',
+    number: '06',
     name: 'LINUX NETWORKING',
     icon: 'Terminal',
     status: 'LEARNING',
+    summary: 'Interfaces, routes, and sockets from the Linux shell.',
+    detail: 'Using iproute2 to inspect and configure interfaces and routes, checking listeners with ss, and resolving DNS.',
     objective: 'Inspect interfaces, routes, and connectivity from the Linux shell using modern tooling.',
     tools: ['Ubuntu/Debian VM', 'iproute2 (ip, ss)', 'net-tools (legacy, for awareness)', 'nmcli', 'systemd-resolved'],
     configuration: [
@@ -135,9 +153,12 @@ export const networkingLabs = [
   },
   {
     id: 'network-troubleshooting',
+    number: '07',
     name: 'NETWORK TROUBLESHOOTING',
     icon: 'Wrench',
     status: 'LEARNING',
+    summary: 'Layer-by-layer isolation of connectivity faults.',
+    detail: 'Walking the OSI and TCP/IP models in order to isolate a failure domain, then documenting findings and the fix.',
     objective: 'Apply systematic methodology to identify and resolve connectivity issues.',
     tools: ['ping', 'traceroute/tracert', 'nslookup/dig', 'ipconfig/ip addr', 'arp', 'netstat/ss', 'tcpdump/Wireshark (basics)'],
     configuration: [

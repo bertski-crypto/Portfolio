@@ -1,0 +1,360 @@
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  padding: calc(var(--nav-h) + var(--sp-7)) 0 var(--sp-7);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 20%, var(--ambient-a), transparent 55%),
+    radial-gradient(ellipse 50% 45% at 85% 80%, var(--ambient-b), transparent 50%);
+}
+
+/* Full-width centered container */
+.hero-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 460px);
+  gap: var(--sp-6);
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--sp-5);
+  box-sizing: border-box;
+}
+
+.hero-content {
+  z-index: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.hero-eyebrow .status-dot { width: 6px; height: 6px; flex-shrink: 0; }
+
+/* Greeting - balanced size */
+.hero-title {
+  font-size: clamp(52px, 5.5vw, 90px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  margin: 0 0 var(--sp-4);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.hero-title em { font-style: normal; color: var(--muted); font-weight: 500; }
+
+/* Professional title */
+.hero-professional-title {
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0 0 var(--sp-4);
+}
+
+/* Skill tags */
+.hero-tagline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1.1vw, 11px);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: var(--sp-4);
+}
+
+.hero-tagline .accent { color: var(--accent); margin: 0 4px; }
+
+/* Description */
+.hero-description {
+  max-width: 650px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin: 0 0 var(--sp-6);
+  font-size: clamp(15px, 1.5vw, 17px);
+  overflow-wrap: anywhere;
+}
+
+/* CTA buttons */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-6);
+}
+
+.hero-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.social-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--glass-secondary);
+  color: var(--muted);
+  backdrop-filter: blur(12px);
+  transition:
+    transform var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease);
+  flex-shrink: 0;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+  color: var(--accent);
+  background: var(--glass-primary);
+}
+
+/* ==========================================================================
+   PROFILE IMAGE COLUMN
+   ========================================================================== */
+
+.hero-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+
+.profile-frame {
+  position: relative;
+  width: 100%;
+  max-width: 610px;
+  aspect-ratio: 1.17 / 1;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+  flex-shrink: 0;
+}
+
+.profile-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(155deg, rgba(255,255,255,0.06), transparent 40%, rgba(0,0,0,0.15));
+}
+
+.profile-frame::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: 0;
+  border-radius: calc(var(--r-xl) + 2px);
+  background: var(--accent-grad);
+  opacity: 0;
+  filter: blur(30px);
+  transition: opacity var(--t-slow) var(--ease);
+}
+
+.profile-frame:hover::after { opacity: 0.35; }
+
+.profile-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform var(--t-slow) var(--ease);
+}
+
+.profile-frame:hover img { transform: scale(1.02); }
+
+/* Status panel */
+.hero-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--glass-secondary);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(16px);
+  text-align: center;
+  width: 100%;
+  max-width: 610px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.hero-status .status-dot { width: 6px; height: 6px; }
+
+.hero-status strong {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.hero-status span {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1599px) {
+  .hero-container {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
+    gap: var(--sp-6);
+    max-width: 1500px;
+  }
+
+  .profile-frame { max-width: 520px; }
+  .hero-status { max-width: 520px; }
+}
+
+@media (max-width: 1439px) {
+  .hero-container {
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 480px);
+    gap: var(--sp-5);
+    max-width: 1340px;
+  }
+
+  .profile-frame { max-width: 480px; }
+  .hero-status { max-width: 480px; }
+}
+
+@media (max-width: 1199px) {
+  .hero-container {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+    gap: var(--sp-5);
+  }
+
+  .hero-title { font-size: clamp(48px, 5vw, 78px); }
+
+  .hero-professional-title { font-size: clamp(19px, 2vw, 26px); }
+
+  .profile-frame { max-width: 420px; }
+  .hero-status { max-width: 420px; }
+}
+
+@media (max-width: 1023px) {
+  .hero {
+    padding: calc(var(--nav-h) + var(--sp-6)) var(--sp-4) var(--sp-6);
+    text-align: center;
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+    max-width: 720px;
+  }
+
+  .hero-content {
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .hero-eyebrow { justify-content: center; }
+
+  .hero-title { font-size: clamp(44px, 7vw, 68px); }
+
+  .hero-professional-title { font-size: clamp(19px, 2.5vw, 26px); }
+
+  .hero-tagline { justify-content: center; }
+
+  .hero-description { max-width: 100%; }
+
+  .hero-actions { justify-content: center; }
+
+  .hero-social { justify-content: center; }
+
+  .hero-visual {
+    order: -1;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    align-items: center;
+  }
+
+  .profile-frame { max-width: 100%; }
+
+  .hero-status { margin: 0 auto; }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    padding: calc(var(--nav-h) + var(--sp-5)) var(--sp-4) var(--sp-6);
+    min-height: auto;
+  }
+
+  .hero-container { gap: var(--sp-4); }
+
+  .hero-title { font-size: clamp(40px, 9vw, 56px); line-height: 0.98; }
+
+  .hero-professional-title { font-size: 18px; }
+
+  .hero-tagline { font-size: 9px; letter-spacing: 0.06em; }
+
+  .hero-description { font-size: 15px; }
+
+  .hero-visual { max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: calc(var(--nav-h) + var(--sp-4)) var(--sp-3) var(--sp-5); }
+
+  .hero-container { gap: var(--sp-4); padding: 0 var(--sp-3); }
+
+  .hero-title { font-size: clamp(36px, 12vw, 48px); }
+
+  .hero-professional-title { font-size: 17px; }
+
+  .hero-actions { flex-direction: column; width: 100%; }
+
+  .hero-actions .btn { width: 100%; justify-content: center; }
+
+  .btn { width: 100%; }
+}

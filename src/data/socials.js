@@ -39,7 +39,7 @@ export const siteConfig = {
   title: 'ASPIRING IT PROFESSIONAL',
   tagline: 'IT SUPPORT • NETWORKING • WEB DEVELOPMENT',
   description: 'I build, troubleshoot, and develop practical IT solutions while continuously improving my skills in networking, system development, Linux, and modern web technologies.',
-  heroIntro: 'HELLO, I\'M ALBERT.',
+  heroIntro: 'HELLO, I\'M  ALBERT.',
   availabilityStatus: 'AVAILABLE FOR IT OPPORTUNITIES',
   resumeFileName: 'Albert-IT-Resume.pdf',
   resumeExists: false, // Set to true when actual resume file is added to public/

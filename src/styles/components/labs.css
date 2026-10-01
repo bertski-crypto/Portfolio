@@ -1,0 +1,178 @@
+/* ==========================================================================
+   NETWORKING LABS SECTION
+   ========================================================================== */
+
+.labs {
+  padding: var(--sp-8) 0;
+}
+
+.labs-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-6);
+  padding: var(--sp-4);
+  background: var(--glass-secondary);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(12px);
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-3);
+  background: var(--glass-primary);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+
+.summary-count {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.summary-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.labs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-3);
+}
+
+@media (max-width: 1199px) {
+  .labs-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .labs-grid { grid-template-columns: 1fr; }
+}
+
+.lab-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+  padding: var(--sp-4);
+}
+
+.lab-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  color: var(--accent);
+  background: var(--accent-soft);
+  margin-bottom: var(--sp-3);
+}
+
+.lab-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+
+.lab-header h3 {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.lab-status {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+}
+
+.lab-status--completed { background: rgba(52, 211, 153, 0.14); color: var(--ok); border: 1px solid rgba(52, 211, 153, 0.28); }
+.lab-status--in-progress { background: rgba(77, 163, 255, 0.14); color: var(--accent); border: 1px solid rgba(77, 163, 255, 0.28); }
+.lab-status--learning { background: rgba(240, 184, 102, 0.14); color: var(--warn); border: 1px solid rgba(240, 184, 102, 0.28); }
+.lab-status--planned { background: rgba(255, 255, 255, 0.05); color: var(--muted); border: 1px solid var(--line); }
+
+.lab-summary {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0 0 var(--sp-3);
+  flex: 1;
+}
+
+.lab-details summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  cursor: pointer;
+  transition: gap var(--t-fast) var(--ease);
+}
+
+.lab-details summary:hover { gap: 10px; }
+.lab-details summary::-webkit-details-marker { display: none; }
+.lab-details summary::marker { display: none; }
+
+.lab-detail-content {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.lab-detail-section h4 {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin: 0 0 var(--sp-2);
+}
+
+.lab-detail-section p,
+.lab-detail-section ul {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.lab-detail-section ul { padding-left: var(--sp-4); }
+.lab-detail-section li { margin-bottom: 4px; }
+
+.labs-disclaimer {
+  margin-top: var(--sp-6);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--glass-secondary);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.labs-disclaimer strong { color: var(--text-dim); }

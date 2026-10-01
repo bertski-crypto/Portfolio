@@ -5,6 +5,7 @@ import About from './components/About';
 import Projects from './components/Projects';
 import NetworkingLabs from './components/NetworkingLabs';
 import Skills from './components/Skills';
+import Certifications from './components/Certifications';
 import Experience from './components/Experience';
 import Education from './components/Education';
 import CurrentlyLearning from './components/CurrentlyLearning';
@@ -17,6 +18,7 @@ const sectionIds = [
   'projects',
   'labs',
   'skills',
+  'certifications',
   'experience',
   'education',
   'learning',
@@ -67,8 +69,10 @@ export default function App() {
 
   return (
     <div className="site-shell">
-      <div className="ambient ambient-one" aria-hidden="true" />
-      <div className="ambient ambient-two" aria-hidden="true" />
+      <div className="ambient-grid" aria-hidden="true" />
+      <div className="ambient-blob ambient-blob--a" aria-hidden="true" />
+      <div className="ambient-blob ambient-blob--b" aria-hidden="true" />
+      <div className="ambient-blob ambient-blob--c" aria-hidden="true" />
 
       <Navbar
         theme={theme}
@@ -82,6 +86,7 @@ export default function App() {
         <Projects />
         <NetworkingLabs />
         <Skills />
+        <Certifications />
         <Experience />
         <Education />
         <CurrentlyLearning />
