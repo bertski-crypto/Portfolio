@@ -25,7 +25,7 @@
 /* Full-width centered container */
 .hero-container {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 460px);
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 580px);
   gap: var(--sp-6);
   align-items: center;
   width: 100%;
@@ -152,9 +152,20 @@
   min-width: 0;
 }
 
+/* Network graphic + portrait, side by side. The graphic tucks slightly
+   under the portrait's left edge for depth. */
+.hero-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
 .profile-frame {
   position: relative;
-  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  z-index: 1;
   max-width: 610px;
   aspect-ratio: 1.17 / 1;
   border-radius: var(--r-xl);
@@ -165,7 +176,22 @@
   transition:
     border-color var(--t-base) var(--ease),
     box-shadow var(--t-base) var(--ease);
-  flex-shrink: 0;
+}
+
+/* Decorative motes drifting over the portrait */
+.hero-motes {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-mote {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 6px 1px var(--accent-cyan);
 }
 
 .profile-frame::before {
@@ -245,7 +271,7 @@
 
 @media (max-width: 1599px) {
   .hero-container {
-    grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
+    grid-template-columns: minmax(0, 1fr) minmax(430px, 560px);
     gap: var(--sp-6);
     max-width: 1500px;
   }
@@ -256,7 +282,7 @@
 
 @media (max-width: 1439px) {
   .hero-container {
-    grid-template-columns: minmax(0, 1fr) minmax(340px, 480px);
+    grid-template-columns: minmax(0, 1fr) minmax(410px, 520px);
     gap: var(--sp-5);
     max-width: 1340px;
   }
@@ -267,7 +293,7 @@
 
 @media (max-width: 1199px) {
   .hero-container {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+    grid-template-columns: minmax(0, 1fr) minmax(380px, 450px);
     gap: var(--sp-5);
   }
 
@@ -314,7 +340,7 @@
   .hero-visual {
     order: -1;
     width: 100%;
-    max-width: 520px;
+    max-width: 580px;
     margin: 0 auto;
     align-items: center;
   }

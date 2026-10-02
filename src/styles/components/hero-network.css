@@ -1,0 +1,100 @@
+/* ==========================================================================
+   HERO NETWORK GRAPH
+   Hexagonal node lattice beside the portrait. Purely decorative.
+   ========================================================================== */
+
+.hero-network {
+  flex: 0 0 auto;
+  width: clamp(128px, 12vw, 176px);
+  margin-right: calc(var(--sp-3) * -1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-network-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* ---------- lattice ---------- */
+
+.hero-network-grad-start { stop-color: var(--accent); }
+.hero-network-grad-end   { stop-color: var(--accent-violet); }
+
+.hero-network-edges line {
+  stroke: url(#hero-network-grad);
+  stroke-width: 1;
+  opacity: 0.3;
+}
+
+/* ---------- travelling light ---------- */
+
+.hero-network-flow line {
+  stroke: var(--accent-cyan);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 6 150;
+  opacity: 0;
+}
+
+.hero-network-flow.is-live line {
+  animation: hero-net-flow 3.4s linear infinite;
+}
+
+@keyframes hero-net-flow {
+  0% {
+    stroke-dashoffset: 156;
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.45;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+/* ---------- nodes ---------- */
+
+.hero-network-dot {
+  fill: var(--accent);
+  stroke: var(--bg);
+  stroke-width: 1.5;
+}
+
+/* Scaling an SVG circle needs an explicit box to scale within. */
+.hero-network-pulse {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.hero-network-satellites circle {
+  fill: var(--accent-cyan);
+  opacity: 0.5;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1023px) {
+  .hero-network { width: clamp(120px, 22vw, 168px); }
+}
+
+@media (max-width: 560px) {
+  .hero-network { width: clamp(96px, 26vw, 132px); }
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-network-flow.is-live line { animation: none; opacity: 0; }
+  .hero-network-pulse { display: none; }
+}
