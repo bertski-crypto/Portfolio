@@ -1,0 +1,139 @@
+/* ==========================================================================
+   TIMELINE
+   A vertical progress rail with one node per entry.
+   Experience and Education share this system.
+
+   Nothing here alters layout: the rail is absolutely positioned inside an
+   otherwise untouched grid, and the node is absolutely positioned inside
+   its own card slot. Only `--tl-progress`, `--tl-reached` and
+   `--tl-current` are driven from JS, so all visual states derive from the
+   existing token palette and theme automatically.
+
+   The rail and node rules are written with a child combinator on purpose.
+   Rules like `.education-slot > * { width: 100% }` share a specificity of
+   (0,1,0) with a bare `.timeline-node`, so which one wins would otherwise
+   come down to CSS file order. Descending to (0,2,0) makes the timeline
+   immune to that regardless of import order.
+   ========================================================================== */
+
+/* The grid becomes the positioning context for the rail. The rail is out of
+   flow, so it never becomes a grid item and the grid keeps its layout. */
+.timeline {
+  position: relative;
+}
+
+/* Each card slot becomes the positioning context for its own node. */
+.timeline-item {
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   Rail
+   -------------------------------------------------------------------------- */
+
+.timeline > .timeline-rail {
+  /* Declared so the fill reads as 0 before the engine first writes it. */
+  --tl-progress: 0;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -18px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--line);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.timeline > .timeline-rail > .timeline-rail-fill {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(var(--tl-progress, 0) * 100%);
+  background: var(--accent-grad);
+  box-shadow: 0 0 12px var(--accent-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Node
+   Sits on the card's left border, which is the classic timeline marker
+   position. The defaults keep it legible if the engine never attaches.
+
+     future  -> opacity .45, scale 1
+     past    -> opacity .80, scale 1
+     current -> opacity 1,   scale 1.08
+   -------------------------------------------------------------------------- */
+
+.timeline-item > .timeline-node {
+  --tl-reached: 0;
+  --tl-current: 0;
+
+  position: absolute;
+  top: 28px;
+  left: 0;
+  width: 11px;
+  height: 11px;
+  margin-left: -5.5px;
+  border-radius: 50%;
+  background: var(--accent-grad);
+  box-shadow: 0 0 0 3px var(--glass-primary);
+  pointer-events: none;
+  opacity: calc(0.45 + var(--tl-reached) * 0.35 + var(--tl-current) * 0.2);
+  transform: scale(calc(1 + var(--tl-current) * 0.08));
+}
+
+/* Soft halo in the existing accent language. Never pulses. */
+.timeline-item > .timeline-node::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid var(--line-accent);
+  opacity: calc(var(--tl-reached) * 0.3 + var(--tl-current) * 0.7);
+  box-shadow: 0 0 14px var(--accent-soft);
+}
+
+/* Short connector descending into the card's own left padding, so the node
+   reads as part of a continuing line without crossing any text. */
+.timeline-item > .timeline-node > .timeline-node-tick {
+  position: absolute;
+  top: 5.5px;
+  left: calc(50% + 16px);
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, var(--line-accent), transparent);
+  opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   Small screens
+   The rail tucks closer in so it can never leave the section gutter, and
+   the marker tightens against the card edge. No change to entry positions.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .timeline > .timeline-rail { left: -12px; }
+
+  .timeline-item > .timeline-node > .timeline-node-tick { height: 26px; }
+}
+
+@media (max-width: 480px) {
+  .timeline > .timeline-rail { left: -9px; }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   The timeline is presented already complete. No drawing, no easing, no
+   parallax - but every entry stays visible and fully readable.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline > .timeline-rail {
+    --tl-progress: 1;
+  }
+
+  .timeline-item > .timeline-node {
+    --tl-reached: 1;
+    --tl-current: 0;
+  }
+}

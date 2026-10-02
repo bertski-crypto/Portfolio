@@ -77,7 +77,16 @@ export default function Footer() {
         </StaggerItem>
       </Stagger>
 
-      <Reveal kind="lead" className="footer-bottom" delay={0.05}>
+      {/* viewportMargin: this row is the last content on the page, so the
+          default -80px bottom root margin leaves it permanently below the
+          observer's edge and it would never reveal. Without this, the
+          copyright and the back-to-top link stay at opacity 0 forever. */}
+      <Reveal
+        kind="lead"
+        className="footer-bottom"
+        delay={0.05}
+        viewportMargin="0px"
+      >
         <span className="footer-copyright">
           © {year} {siteConfig.name}
         </span>

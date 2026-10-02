@@ -19,7 +19,7 @@ import {
   viewportOnce,
   type RevealKind,
 } from './motion';
-import { registerCard } from './card-parallax';
+import { registerCard } from './scroll-motion';
 
 /* ============================================================
  *  HOOKS
@@ -131,6 +131,16 @@ type RevealProps = {
   as?: 'div' | 'section' | 'article' | 'header' | 'li' | 'span';
   amount?: number;
   once?: boolean;
+  /**
+   * Opt-in override for the observer's root margin.
+   *
+   * The default (`viewportOnce`) pulls the bottom edge up 80px so elements
+   * reveal slightly before they reach the fold. That is right almost
+   * everywhere, but it makes the very last element on the page unreachable:
+   * it can never clear `amount` inside the shortened root, so it stays at
+   * opacity 0 forever. Pass `'0px'` for content pinned to the page end.
+   */
+  viewportMargin?: string;
 };
 
 export function Reveal({
@@ -142,6 +152,7 @@ export function Reveal({
   as = 'div',
   amount,
   once = true,
+  viewportMargin,
 }: RevealProps) {
   const reduced = useReduced();
   const scale = useRevealScale();
@@ -156,6 +167,16 @@ export function Reveal({
     );
   }
 
+  /* Defaults to the shared viewport object, unchanged, when not overridden. */
+  const viewport =
+    amount || viewportMargin
+      ? {
+          ...viewportOnce,
+          ...(amount ? { amount } : null),
+          ...(viewportMargin ? { margin: viewportMargin } : null),
+        }
+      : viewportOnce;
+
   return (
     <Component
       className={className}
@@ -165,7 +186,7 @@ export function Reveal({
       }
       initial="hidden"
       whileInView="show"
-      viewport={amount ? { ...viewportOnce, amount } : viewportOnce}
+      viewport={viewport}
       transition={{ delay }}
     >
       {children}
