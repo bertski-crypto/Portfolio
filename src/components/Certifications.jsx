@@ -5,6 +5,7 @@ import { getVerifiedCertifications } from '../data/certifications';
 import {
   Reveal,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverCard,
@@ -26,15 +27,9 @@ export default function Certifications() {
       aria-labelledby="certifications-heading"
     >
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>05</span>
-            <span>certifications</span>
-          </div>
-          <h2 id="certifications-heading" className="heading-lg">
-            Certifications
-          </h2>
-        </Reveal>
+        <SectionTitle num="05" kicker="certifications" id="certifications-heading">
+          Certifications
+        </SectionTitle>
         <Reveal kind="lead" as="p" delay={0.08} className="muted">
           Professional learning and certifications completed during my IT
           development journey.
@@ -58,8 +53,8 @@ export default function Certifications() {
         </Reveal>
       ) : (
         <Stagger className="cert-bento" gap={0.12}>
-          {certs.map((cert) => (
-            <StaggerItem key={cert.id}>
+          {certs.map((cert, i) => (
+            <StaggerItem key={cert.id} parallax parallaxIndex={i}>
               <motion.article
                 className="cert-card glass-card cert-card--featured"
                 whileHover={hoverCard}

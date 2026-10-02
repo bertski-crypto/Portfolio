@@ -20,6 +20,7 @@ import { projects, getFeaturedProjects } from '../data/projects';
 import {
   Reveal,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverCard,
@@ -390,17 +391,11 @@ export default function Projects() {
   return (
     <section id="projects" className="projects section-wrap" aria-labelledby="projects-heading">
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>02</span>
-            <span>selected work</span>
-          </div>
-          <h2 id="projects-heading" className="heading-lg">
-            Projects with a
-            <br />
-            <em>purpose.</em>
-          </h2>
-        </Reveal>
+        <SectionTitle num="02" kicker="selected work" id="projects-heading">
+          Projects with a
+          <br />
+          <em>purpose.</em>
+        </SectionTitle>
         <Reveal kind="lead" as="p" delay={0.08} className="muted">
           Technical work is where concepts become habits: clear requirements,
           useful interfaces, and reliable outcomes.
@@ -498,8 +493,13 @@ export default function Projects() {
         </Reveal>
       ) : (
         <Stagger className="projects-grid" gap={0.1} key={`${activeFilter}-${searchQuery}`}>
-          {filtered.map((project) => (
-            <StaggerItem key={project.id} className="project-card-slot">
+          {filtered.map((project, i) => (
+            <StaggerItem
+              key={project.id}
+              className="project-card-slot"
+              parallax
+              parallaxIndex={i}
+            >
               <ProjectCard
                 project={project}
                 onClick={() => setSelectedProject(project.id)}

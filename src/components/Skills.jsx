@@ -4,13 +4,17 @@ import { Wrench, Network, Code2, Terminal, Container } from 'lucide-react';
 import { skillGroups, toolIcons } from '../data/skills';
 import {
   Reveal,
+  DUR,
+  EASE,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverCardSoft,
   hoverIconPop,
   hoverSoft,
   tapSoft,
+  useReduced,
 } from '../utils/motion-primitives';
 
 import '../styles/components/skills.css';
@@ -39,6 +43,19 @@ function ToolTag({ tool }) {
 /* ------------------------------------------------------------------ */
 function SkillCategory({ group }) {
   const Icon = skillIcons[group.icon] || Code2;
+  const reduced = useReduced();
+
+  // The icon inherits the card's reveal label, so it settles a beat
+  // after the card itself rather than arriving with it.
+  const iconReveal = reduced
+    ? undefined
+    : {
+        hidden: { scale: 0.97 },
+        show: {
+          scale: 1,
+          transition: { duration: DUR.fast, delay: 0.12, ease: EASE.out },
+        },
+      };
 
   return (
     <article className="skill-category">
@@ -46,6 +63,7 @@ function SkillCategory({ group }) {
         <motion.span
           className="skill-icon"
           aria-hidden="true"
+          variants={iconReveal}
           whileHover={hoverIconPop(1.08, -2)}
         >
           <Icon size={16} />
@@ -73,17 +91,11 @@ export default function Skills() {
   return (
     <section id="skills" className="skills section-wrap" aria-labelledby="skills-heading">
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>04</span>
-            <span>technical toolkit</span>
-          </div>
-          <h2 id="skills-heading" className="heading-lg">
-            Tools I use to
-            <br />
-            <em>make things work.</em>
-          </h2>
-        </Reveal>
+        <SectionTitle num="04" kicker="technical toolkit" id="skills-heading">
+          Tools I use to
+          <br />
+          <em>make things work.</em>
+        </SectionTitle>
         <Reveal kind="lead" as="p" delay={0.08} className="muted">
           A growing toolkit grounded in fundamentals. Skill levels are
           intentionally described honestly.
@@ -92,7 +104,11 @@ export default function Skills() {
 
       <Stagger className="skills-bento" gap={0.1}>
         {/* tools card — spans full width */}
-        <StaggerItem className="skill-category skill-category--tools glass-card">
+        <StaggerItem
+          className="skill-category skill-category--tools glass-card"
+          parallax
+          parallaxIndex={0}
+        >
           <div className="tools-header">
             <h3>Development Environment</h3>
             <p>Daily drivers for development and learning</p>
@@ -108,8 +124,13 @@ export default function Skills() {
         </StaggerItem>
 
         {/* skill groups */}
-        {skillGroups.map((group) => (
-          <StaggerItem key={group.label} className="skill-card-slot">
+        {skillGroups.map((group, i) => (
+          <StaggerItem
+            key={group.label}
+            className="skill-card-slot"
+            parallax
+            parallaxIndex={i}
+          >
             <motion.div
               className="skill-card-hover"
               whileHover={hoverCardSoft}

@@ -3,8 +3,8 @@ import { GraduationCap, Award } from 'lucide-react';
 
 import { education, certifications } from '../data/experience';
 import {
-  Reveal,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverCard,
@@ -22,20 +22,23 @@ export default function Education() {
       aria-labelledby="education-heading"
     >
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>06</span>
-            <span>education &amp; certifications</span>
-          </div>
-          <h2 id="education-heading" className="heading-lg">
-            Education
-          </h2>
-        </Reveal>
+        <SectionTitle
+          num="06"
+          kicker="education &amp; certifications"
+          id="education-heading"
+        >
+          Education
+        </SectionTitle>
       </SectionHeader>
 
       <Stagger className="education-grid" gap={0.12}>
-        {education.map((edu) => (
-          <StaggerItem key={edu.id} className="education-slot education-slot--main">
+        {education.map((edu, i) => (
+          <StaggerItem
+            key={edu.id}
+            className="education-slot education-slot--main"
+            parallax
+            parallaxIndex={i}
+          >
             <motion.article
               className="education-card glass-card"
               whileHover={hoverCard}
@@ -89,7 +92,11 @@ export default function Education() {
           </StaggerItem>
         ))}
 
-        <StaggerItem className="education-slot education-slot--side">
+        <StaggerItem
+          className="education-slot education-slot--side"
+          parallax
+          parallaxIndex={1}
+        >
           <motion.aside
             className="cert-summary glass-card"
             aria-label="Certifications summary"

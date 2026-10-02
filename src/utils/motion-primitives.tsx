@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   motion,
   useMotionValue,
@@ -6,20 +6,20 @@ import {
   useScroll,
   useSpring,
   useTransform,
-  type Variants,
 } from 'framer-motion';
 
 import {
   DUR,
   EASE,
   STAGGER,
-  staggerChild,
+  groupVariants,
+  revealVariants,
+  staggerChildVariants,
   staggerParent,
-  revealCard,
-  revealHeading,
-  revealLead,
   viewportOnce,
+  type RevealKind,
 } from './motion';
+import { registerCard } from './card-parallax';
 
 /* ============================================================
  *  HOOKS
@@ -92,6 +92,19 @@ export function useIsDesktop(min = 1024) {
   }, [min]);
 }
 
+/**
+ * Multiplier applied to reveal travel distance. Phones get roughly half
+ * the movement so the same animation reads as subtle rather than big.
+ * Read once on mount — reveals are fire-and-forget, so a mid-session
+ * resize never needs to re-trigger them.
+ */
+export function useRevealScale() {
+  return useState(() => {
+    if (typeof window === 'undefined') return 1;
+    return window.matchMedia('(max-width: 767px)').matches ? 0.5 : 1;
+  })[0];
+}
+
 /** Smoothed 0 → 1 page scroll progress. */
 export function useScrollProgress() {
   const { scrollYProgress } = useScroll();
@@ -108,15 +121,6 @@ export function useScrollProgress() {
  *  Scroll-triggered reveal. Picks its own variant by `kind`
  *  and becomes a no-op under reduced motion.
  * ============================================================ */
-
-const KIND_MAP: Record<string, Variants> = {
-  heading: revealHeading,
-  lead: revealLead,
-  card: revealCard,
-  item: staggerChild,
-};
-
-type RevealKind = keyof typeof KIND_MAP;
 
 type RevealProps = {
   children: React.ReactNode;
@@ -140,6 +144,7 @@ export function Reveal({
   once = true,
 }: RevealProps) {
   const reduced = useReduced();
+  const scale = useRevealScale();
   const Component = motion[as] as typeof motion.div;
 
   if (reduced) {
@@ -155,7 +160,9 @@ export function Reveal({
     <Component
       className={className}
       style={style}
-      variants={KIND_MAP[kind] ?? revealCard}
+      variants={
+        kind === 'group' ? groupVariants() : revealVariants(kind, scale)
+      }
       initial="hidden"
       whileInView="show"
       viewport={amount ? { ...viewportOnce, amount } : viewportOnce}
@@ -219,14 +226,38 @@ export function StaggerItem({
   className,
   style,
   as = 'div',
+  parallax = false,
+  parallaxIndex = 0,
 }: {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   as?: 'div' | 'li' | 'article';
+  /**
+   * Opt this card into scroll-based parallax. Opt-in, because not every
+   * staggered child is a card — form fields and buttons should not drift.
+   */
+  parallax?: boolean;
+  /**
+   * Position within its grid. Drives the per-card variation in travel
+   * distance, direction and easing speed, so cards never move in lockstep.
+   */
+  parallaxIndex?: number;
 }) {
   const reduced = useReduced();
+  const scale = useRevealScale();
   const Component = motion[as] as typeof motion.div;
+  const cardRef = useRef<HTMLElement | null>(null);
+
+  /* Parallax lives on this slot wrapper, while the reveal animates the
+     same element's `transform` and the card's hover animates the element
+     below it. Because scroll movement is written to the standalone CSS
+     `translate` property it composes with both instead of overwriting
+     them, so no extra wrapper element is needed. */
+  useEffect(() => {
+    if (!parallax || reduced) return;
+    return registerCard(cardRef.current, parallaxIndex);
+  }, [parallax, parallaxIndex, reduced]);
 
   if (reduced) {
     const Tag = as as keyof JSX.IntrinsicElements;
@@ -238,9 +269,74 @@ export function StaggerItem({
   }
 
   return (
-    <Component className={className} style={style} variants={staggerChild}>
+    <Component
+      ref={cardRef}
+      className={className}
+      style={style}
+      variants={staggerChildVariants(scale)}
+    >
       {children}
     </Component>
+  );
+}
+
+/* ============================================================
+ *  <SectionTitle>
+ *  Kicker → heading, revealed as two separate steps inside a
+ *  single orchestrated group. Renders the same DOM as before
+ *  (div > .kicker + h2), so nothing about the layout shifts.
+ * ============================================================ */
+
+type SectionTitleProps = {
+  /** Section number, e.g. "04". */
+  num: string;
+  /** Kicker text beside the number. */
+  kicker: string;
+  /** id for the heading, wired to the section's aria-labelledby. */
+  id?: string;
+  /** Heading class — normally heading-lg. */
+  className?: string;
+  children: React.ReactNode;
+};
+
+export function SectionTitle({
+  num,
+  kicker,
+  id,
+  className = 'heading-lg',
+  children,
+}: SectionTitleProps) {
+  const reduced = useReduced();
+  const scale = useRevealScale();
+
+  const group = useMemo(() => groupVariants(), []);
+  const label = useMemo(() => revealVariants('label', scale), [scale]);
+  const heading = useMemo(() => revealVariants('heading', scale), [scale]);
+
+  if (reduced) {
+    return (
+      <div>
+        <div className="kicker">
+          <span>{num}</span>
+          <span>{kicker}</span>
+        </div>
+        <h2 id={id} className={className}>
+          {children}
+        </h2>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div variants={group} initial="hidden" whileInView="show" viewport={viewportOnce}>
+      <motion.div className="kicker" variants={label}>
+        <span>{num}</span>
+        <span>{kicker}</span>
+      </motion.div>
+      <motion.h2 id={id} className={className} variants={heading}>
+        {children}
+      </motion.h2>
+    </motion.div>
   );
 }
 
@@ -275,6 +371,9 @@ export {
   orbDrift,
   particleDrift,
   viewportOptions,
+  groupVariants,
+  revealVariants,
+  staggerChildVariants,
   staggerContainer,
   staggerItem,
   hoverCard,

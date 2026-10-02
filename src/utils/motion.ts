@@ -50,39 +50,53 @@ export const viewportOnce = { once: true, amount: 0.15, margin: '0px 0px -80px 0
 
 /* ============================================================
  *  REVEAL VARIANTS
- * ============================================================ */
+ *  Factories take a distance multiplier so small screens travel
+ *  less — see useRevealScale in motion-primitives.
+ *  ============================================================ */
 
-/** Heading: opacity + y + blur */
-export const revealHeading: Variants = {
-  hidden: { opacity: 0, y: 25, filter: 'blur(6px)' },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: DUR.reveal, ease: EASE.entrance },
-  },
+export type RevealKind =
+  | 'group'
+  | 'label'
+  | 'heading'
+  | 'lead'
+  | 'card'
+  | 'item';
+
+/** Travel distance per kind, in px at full scale. */
+const REVEAL_DISTANCE: Record<RevealKind, number> = {
+  group: 0,
+  label: 15,
+  heading: 20,
+  lead: 20,
+  card: 30,
+  item: 25,
 };
 
-/** Lead paragraph: slightly softer */
-export const revealLead: Variants = {
-  hidden: { opacity: 0, y: 20, filter: 'blur(4px)' },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: DUR.reveal, ease: EASE.entrance },
-  },
+/** Cards and items scale in too — just enough to feel dimensional. */
+const REVEAL_SCALE: Partial<Record<RevealKind, number>> = {
+  card: 0.985,
+  item: 0.985,
 };
 
-/** Card / grid item */
-export const revealCard: Variants = {
-  hidden: { opacity: 0, y: 25, scale: 0.98 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: DUR.reveal, ease: EASE.entrance },
-  },
+/** Orchestrates children without moving itself. */
+export const groupVariants = (gap: number = STAGGER.tight): Variants => ({
+  hidden: {},
+  show: { transition: { staggerChildren: gap } },
+});
+
+export const revealVariants = (kind: RevealKind, scale = 1): Variants => {
+  const y = REVEAL_DISTANCE[kind] * scale;
+  const s = REVEAL_SCALE[kind];
+
+  return {
+    hidden: { opacity: 0, ...(y ? { y } : {}), ...(s ? { scale: s } : {}) },
+    show: {
+      opacity: 1,
+      ...(y ? { y: 0 } : {}),
+      ...(s ? { scale: 1 } : {}),
+      transition: { duration: DUR.reveal, ease: EASE.entrance },
+    },
+  };
 };
 
 /** Bare container that only orchestrates children */
@@ -97,17 +111,14 @@ export const staggerParent = (gap: number = STAGGER.base, delay = 0): Variants =
 export const staggerContainer = staggerParent();
 
 /** Child of a stagger parent */
-export const staggerChild: Variants = {
-  hidden: { opacity: 0, y: 25, scale: 0.98 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: DUR.reveal, ease: EASE.entrance },
-  },
-};
+export const staggerChildVariants = (scale = 1): Variants =>
+  revealVariants('item', scale);
 
-/** Backwards-compatible alias */
+/* Desktop defaults — kept so existing imports keep working. */
+export const revealHeading = revealVariants('heading');
+export const revealLead = revealVariants('lead');
+export const revealCard = revealVariants('card');
+export const staggerChild = staggerChildVariants();
 export const staggerItem = staggerChild;
 
 /* ============================================================

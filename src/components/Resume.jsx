@@ -5,6 +5,7 @@ import { siteConfig } from '../data/socials';
 import {
   Reveal,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverCard,
@@ -23,15 +24,9 @@ export default function Resume() {
   return (
     <section id="resume" className="resume section-wrap" aria-labelledby="resume-heading">
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>08</span>
-            <span>resume</span>
-          </div>
-          <h2 id="resume-heading" className="heading-lg">
-            Resume
-          </h2>
-        </Reveal>
+        <SectionTitle num="08" kicker="resume" id="resume-heading">
+          Resume
+        </SectionTitle>
       </SectionHeader>
 
       <Reveal kind="card">

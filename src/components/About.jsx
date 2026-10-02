@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 
 import {
-  Reveal,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverSoft,
@@ -45,21 +45,20 @@ export default function About() {
   return (
     <section id="about" className="about section-wrap" aria-labelledby="about-heading">
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>01</span>
-            <span>about / orientation</span>
-          </div>
-          <h2 id="about-heading" className="heading-lg">
-            Practical by nature.
-            <br />
-            <em>Curious by default.</em>
-          </h2>
-        </Reveal>
+        <SectionTitle num="01" kicker="about / orientation" id="about-heading">
+          Practical by nature.
+          <br />
+          <em>Curious by default.</em>
+        </SectionTitle>
       </SectionHeader>
 
       <Stagger className="about-bento" gap={0.12}>
-        <StaggerItem as="article" className="bento-item about-card about-card--bio glass-card">
+        <StaggerItem
+          as="article"
+          className="bento-item about-card about-card--bio glass-card"
+          parallax
+          parallaxIndex={0}
+        >
           <div className="about-bio">
             <h3>Hi, I'm Albert.</h3>
             <p>
@@ -84,7 +83,12 @@ export default function About() {
           </div>
         </StaggerItem>
 
-        <StaggerItem as="article" className="bento-item about-card about-card--focus glass-card">
+        <StaggerItem
+          as="article"
+          className="bento-item about-card about-card--focus glass-card"
+          parallax
+          parallaxIndex={1}
+        >
           <h3 className="focus-label">Current Focus</h3>
           <div className="focus-list">
             <FocusItem label="IT SUPPORT">
@@ -102,7 +106,12 @@ export default function About() {
           </div>
         </StaggerItem>
 
-        <StaggerItem as="article" className="bento-item about-card about-card--learning glass-card">
+        <StaggerItem
+          as="article"
+          className="bento-item about-card about-card--learning glass-card"
+          parallax
+          parallaxIndex={2}
+        >
           <h3 className="focus-label">Currently Learning</h3>
           <div className="learning-list">
             <LearningItem

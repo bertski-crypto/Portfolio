@@ -8,6 +8,7 @@ import { socialLinks } from '../data/socials';
 import {
   Reveal,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverCard,
@@ -47,17 +48,11 @@ export default function Contact() {
   return (
     <section id="contact" className="contact section-wrap" aria-labelledby="contact-heading">
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>09</span>
-            <span>open channel</span>
-          </div>
-          <h2 id="contact-heading" className="heading-lg">
-            Let&apos;s work
-            <br />
-            <em>together.</em>
-          </h2>
-        </Reveal>
+        <SectionTitle num="09" kicker="open channel" id="contact-heading">
+          Let&apos;s work
+          <br />
+          <em>together.</em>
+        </SectionTitle>
         <Reveal kind="lead" as="p" delay={0.08} className="muted">
           I'm open to discussing IT opportunities, technical projects,
           internships, junior roles, and collaboration.

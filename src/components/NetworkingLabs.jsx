@@ -14,6 +14,7 @@ import { networkingLabs, getLabsByStatus } from '../data/labs';
 import {
   Reveal,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverCardSoft,
@@ -148,17 +149,11 @@ export default function NetworkingLabs() {
   return (
     <section id="labs" className="labs section-wrap" aria-labelledby="labs-heading">
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>03</span>
-            <span>hands-on practice</span>
-          </div>
-          <h2 id="labs-heading" className="heading-lg">
-            Networking
-            <br />
-            <em>lab notes.</em>
-          </h2>
-        </Reveal>
+        <SectionTitle num="03" kicker="hands-on practice" id="labs-heading">
+          Networking
+          <br />
+          <em>lab notes.</em>
+        </SectionTitle>
         <Reveal kind="lead" as="p" delay={0.08} className="muted">
           Networking is more than a list on a resume. These are the topics I am
           actively translating into repeatable practice.
@@ -168,8 +163,13 @@ export default function NetworkingLabs() {
       <SummaryBar />
 
       <Stagger className="labs-grid" gap={0.09}>
-        {networkingLabs.map((lab) => (
-          <StaggerItem key={lab.id} className="lab-card-slot">
+        {networkingLabs.map((lab, i) => (
+          <StaggerItem
+            key={lab.id}
+            className="lab-card-slot"
+            parallax
+            parallaxIndex={i}
+          >
             <motion.div
               className="lab-card-hover"
               whileHover={hoverCardSoft}

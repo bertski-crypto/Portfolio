@@ -3,6 +3,7 @@ import { practicalExperience } from '../data/experience';
 import {
   Reveal,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverCard,
@@ -18,17 +19,11 @@ export default function Experience() {
       aria-labelledby="experience-heading"
     >
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>05</span>
-            <span>practical experience</span>
-          </div>
-          <h2 id="experience-heading" className="heading-lg">
-            Learning by
-            <br />
-            <em>shipping.</em>
-          </h2>
-        </Reveal>
+        <SectionTitle num="05" kicker="practical experience" id="experience-heading">
+          Learning by
+          <br />
+          <em>shipping.</em>
+        </SectionTitle>
         <Reveal kind="lead" as="p" delay={0.08} className="muted">
           My experience so far is built through coursework, technical projects,
           labs, and the discipline of figuring out what happens when things do
@@ -37,8 +32,14 @@ export default function Experience() {
       </SectionHeader>
 
       <Stagger className="experience-grid" gap={0.12}>
-        {practicalExperience.map((item) => (
-          <StaggerItem key={item.id} as="article" className="experience-card-slot">
+        {practicalExperience.map((item, i) => (
+          <StaggerItem
+            key={item.id}
+            as="article"
+            className="experience-card-slot"
+            parallax
+            parallaxIndex={i}
+          >
             <motion.div
               className="experience-card glass-card"
               role="listitem"

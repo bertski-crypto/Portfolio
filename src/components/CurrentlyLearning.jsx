@@ -5,6 +5,7 @@ import { currentlyLearning } from '../data/experience';
 import {
   Reveal,
   SectionHeader,
+  SectionTitle,
   Stagger,
   StaggerItem,
   hoverCard,
@@ -76,17 +77,11 @@ export default function CurrentlyLearning() {
       aria-labelledby="learning-heading"
     >
       <SectionHeader className="section-header">
-        <Reveal kind="heading" as="div">
-          <div className="kicker">
-            <span>07</span>
-            <span>currently learning</span>
-          </div>
-          <h2 id="learning-heading" className="heading-lg">
-            Always
-            <br />
-            <em>learning.</em>
-          </h2>
-        </Reveal>
+        <SectionTitle num="07" kicker="currently learning" id="learning-heading">
+          Always
+          <br />
+          <em>learning.</em>
+        </SectionTitle>
         <Reveal kind="lead" as="p" delay={0.08} className="muted">
           These are the topics I'm actively exploring, developing, or planning to
           study next. Status labels reflect current progress honestly.
@@ -94,8 +89,13 @@ export default function CurrentlyLearning() {
       </SectionHeader>
 
       <Stagger className="learning-grid" gap={0.1} role="list">
-        {currentlyLearning.map((item) => (
-          <StaggerItem key={item.topic} className="learning-slot-wrap">
+        {currentlyLearning.map((item, i) => (
+          <StaggerItem
+            key={item.topic}
+            className="learning-slot-wrap"
+            parallax
+            parallaxIndex={i}
+          >
             <LearningCard item={item} />
           </StaggerItem>
         ))}
