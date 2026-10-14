@@ -63,9 +63,9 @@ export const education = [
   {
     id: 'degree',
     degree: 'Bachelor of Science in Information Technology',
-    school: 'YOUR_UNIVERSITY_NAME',
-    location: 'YOUR_CITY, YOUR_COUNTRY',
-    period: 'YEAR_START – YEAR_END (Expected Graduation: YEAR)',
+    school: 'Computer Communication Development Institute',
+    location: 'Sikatuna, Old Albay District, Legazpi City, Albay, Philippines',
+    period: '2023 – 2027 (Expected Graduation: 2027)',
     status: 'IN PROGRESS',
     relevantCoursework: [
       'Computer Programming (Java, Python, C)',
@@ -77,7 +77,6 @@ export const education = [
       'Software Engineering',
       'Capstone Project: AI-Powered Child Immunization Monitoring System',
     ],
-    notes: 'Replace placeholder values with actual institution details.',
   },
 ];
 

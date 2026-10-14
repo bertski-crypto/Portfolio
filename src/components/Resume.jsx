@@ -153,7 +153,7 @@ Python Essentials 1 - DICT-ITU DTC Initiative / Cisco Networking Academy
 
 CONTACT
 GitHub: https://github.com/bertski-crypto
-Email: humanperson0816@gmail.com`}</pre>
+Email: beato3727@gmail.com`}</pre>
             </div>
           </details>
         </motion.article>

@@ -21,7 +21,7 @@ export const socialLinks = [
     id: 'email',
     label: 'Email Me',
     icon: 'SiGmail',
-    href: 'mailto:humanperson0816@gmail.com',
+    href: 'mailto:beato3727@gmail.com',
     external: false,
     ariaLabel: 'Send me an email',
     showArrow: true,
@@ -31,7 +31,7 @@ export const socialLinks = [
 export const footerLinks = [
   { label: 'GitHub', href: 'https://github.com/bertski-crypto', external: true },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/YOUR_USERNAME', external: true },
-  { label: 'Email', href: 'mailto:humanperson0816@gmail.com', external: false },
+  { label: 'Email', href: 'mailto:beato3727@gmail.com', external: false },
 ];
 
 export const siteConfig = {

@@ -69,12 +69,12 @@ export default function Contact() {
           >
             <motion.a
               className="contact-email"
-              href="mailto:humanperson0816@gmail.com"
+              href="mailto:beato3727@gmail.com"
               whileHover={hoverSoft}
               whileTap={tapSoft}
             >
               <Mail size={18} aria-hidden="true" />
-              <span>humanperson0816@gmail.com</span>
+              <span>beato3727@gmail.com</span>
             </motion.a>
 
             <Stagger className="contact-links" gap={0.08} role="list">
