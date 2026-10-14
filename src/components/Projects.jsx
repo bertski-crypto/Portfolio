@@ -52,6 +52,7 @@ const projectIcons = {
   'CAPSTONE / INFORMATION SYSTEM': Shield,
   'WEB DEVELOPMENT / CONTAINERIZATION': Code2,
   'SYSTEM DEVELOPMENT / WEB APPLICATION': Server,
+  'CYBERSECURITY / NETWORK DEFENSE': Shield,
 };
 
 const statusConfig = {

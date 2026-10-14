@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Ambient from './components/Ambient';
+import ThreeDBackground from './components/ThreeDBackground';
 import ScrollProgress from './components/ScrollProgress';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -71,6 +72,7 @@ export default function App() {
 
   return (
     <div className="site-shell">
+      <ThreeDBackground />
       <Ambient />
       <ScrollProgress />
 
