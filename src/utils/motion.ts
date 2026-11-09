@@ -135,12 +135,15 @@ export const HERO_STEPS = [
   { key: 'media', delay: 0.52, y: 24 },
 ] as const;
 
+/* Entrance: opacity + translate only. The old `filter: blur(6px)` step
+   forced the browser to re-composite every hero element (including the
+   500px card) on each frame of the entrance. Same visual rhythm, far
+   cheaper — no blur pass at all. */
 export const heroStep = (delay: number, y: number): Variants => ({
-  hidden: { opacity: 0, y, filter: 'blur(6px)' },
+  hidden: { opacity: 0, y },
   show: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: { duration: DUR.reveal, ease: EASE.entrance, delay },
   },
 });

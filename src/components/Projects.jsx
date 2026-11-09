@@ -1,59 +1,32 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo, useEffect, useRef } from 'react';
 import {
-  Filter,
   X,
-  Search,
   ChevronRight,
   Check,
   Clock,
   AlertTriangle,
   ExternalLink,
-  Shield,
-  Server,
-  Wrench,
-  Code2,
 } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
 
 import { projects, getFeaturedProjects } from '../data/projects';
+import { buildProjectCarouselItems } from '../data/carouselCovers';
+import StarBorder from './StarBorder';
+import CircularCarousel from './CircularCarousel';
+import usePortfolioTheme from '../utils/usePortfolioTheme';
 import {
   Reveal,
   SectionHeader,
   SectionTitle,
-  Stagger,
-  StaggerItem,
-  hoverCard,
-  hoverIconShift,
   hoverPrimary,
   hoverSecondary,
-  hoverSoft,
-  hoverZoom,
   tapSoft,
   useReduced,
 } from '../utils/motion-primitives';
 
 import '../styles/components/projects.css';
 import '../styles/components/bento.css';
-
-const categories = [
-  'ALL',
-  'IT SUPPORT',
-  'NETWORKING',
-  'WEB DEVELOPMENT',
-  'SYSTEM DEVELOPMENT',
-  'ACADEMIC',
-  'TOOLS',
-  'DOCKER',
-];
-
-const projectIcons = {
-  'IT SUPPORT / WEB APPLICATION': Wrench,
-  'CAPSTONE / INFORMATION SYSTEM': Shield,
-  'WEB DEVELOPMENT / CONTAINERIZATION': Code2,
-  'SYSTEM DEVELOPMENT / WEB APPLICATION': Server,
-  'CYBERSECURITY / NETWORK DEFENSE': Shield,
-};
 
 const statusConfig = {
   'COMPLETED': { icon: Check, tone: 'ok', label: 'COMPLETED' },
@@ -62,109 +35,9 @@ const statusConfig = {
 };
 
 /* ================================================================== */
-/*  Card                                                               */
-/* ================================================================== */
-function ProjectCard({ project, onClick }) {
-  const reduced = useReduced();
-  const Icon = projectIcons[project.category] || Code2;
-  const status = statusConfig[project.status] || statusConfig['IN DEVELOPMENT'];
-
-  const card = (
-    <article
-      className="project-card glass-card"
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick();
-        }
-      }}
-      tabIndex={0}
-      role="button"
-      aria-label={`View ${project.title} project details`}
-    >
-      <div className="project-card-header">
-        <div>
-          <span className="project-number">{project.number}</span>
-          <span className="project-category">{project.category}</span>
-        </div>
-        <motion.div
-          className="project-icon"
-          aria-hidden="true"
-          whileHover={reduced ? undefined : { scale: 1.08 }}
-          transition={{ duration: 0.18 }}
-        >
-          <Icon size={28} />
-        </motion.div>
-      </div>
-
-      <h3>{project.title}</h3>
-      <p>{project.shortDescription}</p>
-
-      <div className="project-tech" role="list" aria-label="Technologies used">
-        {project.technologies.slice(0, 6).map((tag) => (
-          <span key={tag} className="tag" role="listitem">
-            {tag}
-          </span>
-        ))}
-        {project.technologies.length > 6 && (
-          <span className="tag">+{project.technologies.length - 6} more</span>
-        )}
-      </div>
-
-      <div className="project-footer">
-        <span className={`badge badge--${status.tone}`}>{status.label}</span>
-
-        <div className="project-links">
-          <motion.a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="project-link"
-            aria-label={`View ${project.title} on GitHub`}
-            onClick={(e) => e.stopPropagation()}
-            whileHover={hoverSoft}
-            whileTap={tapSoft}
-          >
-            <FaGithub size={15} aria-hidden="true" />
-          </motion.a>
-
-          {project.demo && (
-            <motion.a
-              href={project.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="project-link"
-              aria-label={`View ${project.title} live demo`}
-              onClick={(e) => e.stopPropagation()}
-              whileHover={hoverSoft}
-              whileTap={tapSoft}
-            >
-              <ExternalLink size={15} aria-hidden="true" />
-            </motion.a>
-          )}
-        </div>
-      </div>
-    </article>
-  );
-
-  if (reduced) return card;
-
-  return (
-    <motion.div
-      className="project-card-wrap"
-      whileHover={hoverCard}
-      whileTap={tapSoft}
-    >
-      {card}
-    </motion.div>
-  );
-}
-
-/* ================================================================== */
 /*  Modal                                                              */
 /* ================================================================== */
-function ProjectModal({ projectId, onClose }) {
+function ProjectModal({ projectId, onClose, theme }) {
   const project = projects.find((p) => p.id === projectId);
   const modalRef = useRef(null);
   const prevFocusRef = useRef(null);
@@ -173,7 +46,12 @@ function ProjectModal({ projectId, onClose }) {
   useEffect(() => {
     prevFocusRef.current = document.activeElement;
     modalRef.current?.focus();
+    /* The page scrolls inside <main class="snap-container">, not <body>,
+       so lock the real scroll root or the page scrolls behind the modal. */
+    const scroller = document.getElementById('top');
+    const prevOverflow = scroller ? scroller.style.overflow : '';
     document.body.style.overflow = 'hidden';
+    if (scroller) scroller.style.overflow = 'hidden';
 
     const onKey = (e) => {
       if (e.key === 'Escape') onClose();
@@ -183,6 +61,7 @@ function ProjectModal({ projectId, onClose }) {
 
     return () => {
       document.body.style.overflow = '';
+      if (scroller) scroller.style.overflow = prevOverflow;
       document.removeEventListener('keydown', onKey);
       prevFocusRef.current?.focus();
     };
@@ -212,8 +91,13 @@ function ProjectModal({ projectId, onClose }) {
 
   const body = (
     <div className="modal-content" ref={modalRef} tabIndex={-1} onClick={(e) => e.stopPropagation()}>
-      <motion.button
+      <StarBorder
+        as={motion.button}
+        type="button"
         className="modal-close"
+        theme={theme}
+        radius={999}
+        hover="reveal"
         onClick={onClose}
         aria-label="Close project details"
         whileHover={{ scale: 1.08, rotate: 90 }}
@@ -221,7 +105,7 @@ function ProjectModal({ projectId, onClose }) {
         transition={{ duration: 0.2 }}
       >
         <X size={20} aria-hidden="true" />
-      </motion.button>
+      </StarBorder>
 
       <div className="modal-header">
         <div className="modal-meta">
@@ -297,30 +181,37 @@ function ProjectModal({ projectId, onClose }) {
       </div>
 
       <div className="modal-footer">
-        <motion.a
+        <StarBorder
+          as={motion.a}
           href={project.github}
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-primary"
+          theme={theme}
+          color="#ffffff"
+          radius={16}
           whileHover={hoverPrimary}
           whileTap={tapSoft}
         >
           <FaGithub size={17} aria-hidden="true" />
           VIEW ON GITHUB
-        </motion.a>
+        </StarBorder>
 
         {project.demo && (
-          <motion.a
+          <StarBorder
+            as={motion.a}
             href={project.demo}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-ghost"
+            theme={theme}
+            radius={16}
             whileHover={hoverSecondary}
             whileTap={tapSoft}
           >
             <ExternalLink size={17} aria-hidden="true" />
             LIVE DEMO
-          </motion.a>
+          </StarBorder>
         )}
       </div>
     </div>
@@ -357,37 +248,12 @@ function ProjectModal({ projectId, onClose }) {
 /*  Section                                                            */
 /* ================================================================== */
 export default function Projects() {
-  const [activeFilter, setActiveFilter] = useState('ALL');
-  const [searchQuery, setSearchQuery] = useState('');
+  const theme = usePortfolioTheme();
   const [selectedProject, setSelectedProject] = useState(null);
-  const [showFilters, setShowFilters] = useState(false);
-  const reduced = useReduced();
 
-  const featured = getFeaturedProjects();
-
-  const filtered = useMemo(() => {
-    let result = featured;
-
-    if (activeFilter !== 'ALL') {
-      result = result.filter((p) => p.categoryTags.includes(activeFilter));
-    }
-
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.shortDescription.toLowerCase().includes(q) ||
-          p.technologies.some((t) => t.toLowerCase().includes(q)) ||
-          p.category.toLowerCase().includes(q),
-      );
-    }
-
-    return result;
-  }, [activeFilter, searchQuery, featured]);
-
-  const hasCategory = (cat) =>
-    cat === 'ALL' ? featured.length > 0 : featured.some((p) => p.categoryTags.includes(cat));
+  const featured = useMemo(() => getFeaturedProjects(), []);
+  const carouselItems = useMemo(() => buildProjectCarouselItems(featured), [featured]);
+  const fadeColor = theme === 'light' ? '#eef1f6' : '#07090c';
 
   return (
     <section id="projects" className="projects section-wrap" aria-labelledby="projects-heading">
@@ -403,117 +269,36 @@ export default function Projects() {
         </Reveal>
       </SectionHeader>
 
-      {/* toolbar */}
-      <Reveal kind="lead" className="projects-toolbar" delay={0.12}>
-        <div className="search-box" role="search">
-          <Search size={16} aria-hidden="true" />
-          <input
-            type="search"
-            placeholder="Search projects..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            aria-label="Search projects by name, description, or technology"
-          />
-          {searchQuery && (
-            <motion.button
-              className="search-clear"
-              onClick={() => setSearchQuery('')}
-              aria-label="Clear search"
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              whileTap={tapSoft}
-              transition={{ duration: 0.2 }}
-            >
-              <X size={14} aria-hidden="true" />
-            </motion.button>
-          )}
+      <Reveal kind="card" className="section-carousel-block" delay={0.1}>
+        <div className="section-carousel__head">
+          <span className="section-carousel__eyebrow">Featured work</span>
+          <span className="section-carousel__hint">Drag to rotate · Click a card to open the case study</span>
         </div>
-
-        <div className="filter-controls">
-          <motion.button
-            className={`filter-toggle ${showFilters ? 'open' : ''}`}
-            onClick={() => setShowFilters((v) => !v)}
-            aria-expanded={showFilters}
-            aria-controls="filter-panel"
-            aria-label="Filter projects"
-            whileHover={hoverSoft}
-            whileTap={tapSoft}
-          >
-            <Filter size={16} aria-hidden="true" />
-            <span>{activeFilter}</span>
-          </motion.button>
-
-          <AnimatePresence>
-            {showFilters && (
-              <motion.div
-                id="filter-panel"
-                className="filter-panel is-open"
-                role="listbox"
-                aria-label="Project categories"
-                initial={reduced ? false : { opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduced ? undefined : { opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-              >
-                {categories.filter(hasCategory).map((cat) => (
-                  <motion.button
-                    key={cat}
-                    role="option"
-                    aria-selected={activeFilter === cat}
-                    className={`filter-option ${activeFilter === cat ? 'is-active' : ''}`}
-                    onClick={() => {
-                      setActiveFilter(cat);
-                      setShowFilters(false);
-                    }}
-                    whileHover={hoverSoft}
-                    whileTap={tapSoft}
-                  >
-                    {cat}
-                  </motion.button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <div className="section-carousel section-carousel--projects">
+          <CircularCarousel
+            items={carouselItems}
+            preset="cylinder"
+            intro="rise"
+            autoplay={selectedProject ? 'off' : 'drift'}
+            cardWidth={560}
+            aspectRatio={1.5}
+            gap={26}
+            speed={9}
+            fadeColor={fadeColor}
+            depthFade={theme === 'light' ? 0.3 : 0.55}
+            cornerRadius={16}
+            captions
+            onItemClick={(item) => setSelectedProject(item.id)}
+            className="section-carousel__widget"
+          />
         </div>
       </Reveal>
-
-      {/* grid */}
-      {filtered.length === 0 ? (
-        <Reveal kind="lead" className="no-results">
-          <p>No projects match your current filters.</p>
-          <motion.button
-            className="btn btn-ghost"
-            onClick={() => {
-              setActiveFilter('ALL');
-              setSearchQuery('');
-            }}
-            whileHover={hoverSecondary}
-            whileTap={tapSoft}
-          >
-            Clear filters
-          </motion.button>
-        </Reveal>
-      ) : (
-        <Stagger className="projects-grid" gap={0.1} key={`${activeFilter}-${searchQuery}`}>
-          {filtered.map((project, i) => (
-            <StaggerItem
-              key={project.id}
-              className="project-card-slot"
-              parallax
-              parallaxIndex={i}
-            >
-              <ProjectCard
-                project={project}
-                onClick={() => setSelectedProject(project.id)}
-              />
-            </StaggerItem>
-          ))}
-        </Stagger>
-      )}
 
       <AnimatePresence>
         {selectedProject && (
           <ProjectModal
             projectId={selectedProject}
+            theme={theme}
             onClose={() => setSelectedProject(null)}
           />
         )}

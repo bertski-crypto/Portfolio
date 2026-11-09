@@ -5,6 +5,8 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { SiGmail } from 'react-icons/si';
 
 import { socialLinks } from '../data/socials';
+import StarBorder from './StarBorder';
+import usePortfolioTheme from '../utils/usePortfolioTheme';
 import {
   Reveal,
   SectionHeader,
@@ -24,6 +26,7 @@ import '../styles/components/contact.css';
 const socialIcons = { FaGithub, FaLinkedin, SiGmail };
 
 export default function Contact() {
+  const theme = usePortfolioTheme();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -67,15 +70,19 @@ export default function Contact() {
             aria-label="Contact channels"
             whileHover={hoverCard}
           >
-            <motion.a
+            <StarBorder
+              as={motion.a}
               className="contact-email"
               href="mailto:beato3727@gmail.com"
+              theme={theme}
+              radius={22}
+              hover="reveal"
               whileHover={hoverSoft}
               whileTap={tapSoft}
             >
               <Mail size={18} aria-hidden="true" />
               <span>beato3727@gmail.com</span>
-            </motion.a>
+            </StarBorder>
 
             <Stagger className="contact-links" gap={0.08} role="list">
               {socialLinks.map(({ label, icon: IconName, href, external, ariaLabel }) => {
@@ -172,9 +179,13 @@ export default function Contact() {
               </Reveal>
 
               <Reveal kind="item" delay={0.22}>
-                <motion.button
+                <StarBorder
+                  as={motion.button}
                   type="submit"
                   className="btn btn-primary form-submit"
+                  theme={theme}
+                  color="#ffffff"
+                  radius={16}
                   disabled={busy}
                   aria-busy={busy}
                   whileHover={hoverPrimary}
@@ -193,7 +204,7 @@ export default function Contact() {
                       </motion.span>
                     </>
                   )}
-                </motion.button>
+                </StarBorder>
               </Reveal>
 
               {sent && (

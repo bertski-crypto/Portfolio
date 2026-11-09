@@ -1,0 +1,37 @@
+/* ==========================================================================
+   SCROLL SNAP — Full-page section snapping
+   The <main class="snap-container"> is the scroll root.
+   Direct children snap one at a time.
+   ========================================================================== */
+
+/* ── Scroll container ─────────────────────────────────────────────────── */
+/* Proximity snapping only (not mandatory) so the wheel/trackpad feels
+   free while sections still settle into place. No permanent compositor
+   layer — that was forcing the whole page to recomposite on every scroll. */
+.snap-container {
+  height: 100dvh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-snap-type: y proximity;
+  scrollbar-gutter: stable;
+}
+
+/* ── Snap targets: each direct section child ──────────────────────────── */
+.snap-container > .section-wrap {
+  scroll-snap-align: start;
+  min-height: 100dvh;
+}
+
+/* Footer — shorter is fine */
+.snap-container > .footer {
+  scroll-snap-align: start;
+  min-height: 40dvh;
+}
+
+/* ── Reduced-motion override ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .snap-container {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+}

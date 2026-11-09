@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useReduced } from '../utils/motion-primitives';
+import { subscribeBackgroundActivity } from '../utils/background-activity';
 import '../styles/components/threed-background.css';
 
 /* ------------------------------------------------------------------ */
@@ -72,7 +73,10 @@ export default function ThreeDBackground() {
 
     const desktop = window.matchMedia('(min-width: 768px)').matches;
     const saveData = Boolean(navigator.connection && navigator.connection.saveData);
-    const dpr = Math.min(window.devicePixelRatio || 1, desktop ? 1.5 : 1);
+    /* This is the largest animated surface on the page (full viewport).
+       At 1.25x the 1px strokes are visually indistinguishable behind the
+       content + vignette, while the per-frame fill drops ~30%. */
+    const dpr = Math.min(window.devicePixelRatio || 1, desktop ? 1.25 : 1);
 
     let w = 0;
     let h = 0;
@@ -136,14 +140,18 @@ export default function ThreeDBackground() {
     }));
 
     /* ---------------- scroll + visibility state (refs only) ------------ */
-    let targetScroll = window.scrollY || 0;
+    const mainEl = document.getElementById('top');
+    let targetScroll = mainEl ? mainEl.scrollTop : 0;
     let smoothScroll = targetScroll;
     let running = true;
     let raf = 0;
-    const t0 = performance.now();
+    /* Animation clock advances only while the loop runs, so pausing
+       (idle settle / hidden tab) never leaves a visual jump on resume. */
+    let clock = 0;
+    let lastFrame = 0;
 
     const onScroll = () => {
-      targetScroll = window.scrollY || 0;
+      targetScroll = mainEl ? mainEl.scrollTop : 0;
       if (!running) start();
     };
     const onResize = () => resize();
@@ -151,21 +159,79 @@ export default function ThreeDBackground() {
       if (document.hidden) {
         running = false;
         cancelAnimationFrame(raf);
+        lastFrame = 0;
       } else {
-        targetScroll = window.scrollY || 0;
+        targetScroll = mainEl ? mainEl.scrollTop : 0;
         if (!running) start();
       }
     };
     const themeObserver = new MutationObserver(() => {
       paletteRef.current = readPalette();
+      /* Theme colours changed — rebuild the cached sphere sprites
+         on the next draw instead of keeping stale colours. */
+      sphereSprites.fill(null);
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const _scrollEl = document.getElementById('top') || window;
+    _scrollEl.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize, { passive: true });
     document.addEventListener('visibilitychange', onVisibility);
 
+    /* Idle settle: park the loop after a quiet spell so a static backdrop
+       lets every glass surface reuse its cached blur. */
+    const unsubscribeActivity = subscribeBackgroundActivity(idle => {
+      if (idle) {
+        running = false;
+        cancelAnimationFrame(raf);
+        raf = 0;
+        lastFrame = 0;
+      } else if (!document.hidden) {
+        targetScroll = mainEl ? mainEl.scrollTop : 0;
+        smoothScroll = targetScroll;
+        if (!running) start();
+      }
+    });
+
     const proj = new Array(8);
+
+    /* Sphere glow is pre-rendered once per palette colour and drawn as a
+       sprite. The old code built a radial gradient per sphere per frame —
+       a surprisingly hot path at 60fps. */
+    const SPHERE_SIZE = 160;
+    const sphereSprites = [null, null, null];
+    const sphereSprite = index => {
+      const cached = sphereSprites[index];
+      if (cached) return cached;
+      const sprite = document.createElement('canvas');
+      sprite.width = SPHERE_SIZE;
+      sprite.height = SPHERE_SIZE;
+      const sctx = sprite.getContext('2d');
+      if (!sctx) return null;
+      const center = SPHERE_SIZE / 2;
+      const radius = center - 1;
+      const pal = PALETTE();
+      const col = pal[index];
+      const g = sctx.createRadialGradient(center - radius * 0.3, center - radius * 0.3, 0, center, center, radius);
+      g.addColorStop(0, rgba(pal[1], 0.32));
+      g.addColorStop(0.55, rgba(col, 0.12));
+      g.addColorStop(1, rgba(col, 0));
+      sctx.fillStyle = g;
+      sctx.beginPath();
+      sctx.arc(center, center, radius, 0, Math.PI * 2);
+      sctx.fill();
+      sctx.strokeStyle = rgba(col, 0.28);
+      sctx.lineWidth = 1;
+      sctx.beginPath();
+      sctx.arc(center, center, radius, 0, Math.PI * 2);
+      sctx.stroke();
+      sphereSprites[index] = sprite;
+      return sprite;
+    };
+
+    const nodeX = new Array(nodes.length);
+    const nodeY = new Array(nodes.length);
+    let lastDraw = 0;
 
     function drawShape(s, t, heroMix) {
       const pal = PALETTE();
@@ -218,29 +284,33 @@ export default function ThreeDBackground() {
         ctx.stroke();
       } else {
         const r = s.size * (0.35 + s.depth * 0.45);
-        const g = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, 0, cx, cy, r);
-        g.addColorStop(0, rgba(pal[1], 0.32 * alphaMul));
-        g.addColorStop(0.55, rgba(col, 0.12 * alphaMul));
-        g.addColorStop(1, rgba(col, 0));
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = rgba(col, 0.28 * alphaMul);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.stroke();
+        const sprite = sphereSprite(s.color);
+        if (sprite) {
+          ctx.globalAlpha = alphaMul;
+          ctx.drawImage(sprite, cx - r, cy - r, r * 2, r * 2);
+          ctx.globalAlpha = 1;
+        }
       }
     }
 
     function frame(now) {
       if (!running) return;
-      const t = (now - t0) / 1000;
+      /* Background art drifts slowly; 30fps is visually identical and
+         halves the canvas + compositing cost of this full-screen layer. */
+      if (now - lastDraw < 30) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+      const dt = lastFrame ? Math.min(now - lastFrame, 50) : 0;
+      lastFrame = now;
+      clock += dt;
+      lastDraw = now;
+      const t = clock / 1000;
 
-      /* Eased scroll chase — continuous, never jumpy. */
+      /* Eased scroll chase — continuous, never jumpy. Rate is per drawn
+         frame (30fps cadence) so the eased speed stays as designed. */
       const diff = targetScroll - smoothScroll;
-      smoothScroll += Math.abs(diff) < 0.05 ? diff : diff * 0.07;
+      smoothScroll += Math.abs(diff) < 0.05 ? diff : diff * 0.135;
 
       const vh = h || 1;
       const heroMix = clamp01(1 - smoothScroll / (vh * 1.3));
@@ -255,9 +325,10 @@ export default function ThreeDBackground() {
         }
       }
 
-      /* Network nodes + links (positions resolved once per frame). */
-      const px = new Array(nodes.length);
-      const py = new Array(nodes.length);
+      /* Network nodes + links (positions resolved once per frame).
+         Arrays are pre-allocated above — no per-frame garbage. */
+      const px = nodeX;
+      const py = nodeY;
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
         px[i] = n.bx * w + Math.cos((t * 2 * Math.PI) / n.dur + n.phase) * n.amp * 0.6;
@@ -292,12 +363,9 @@ export default function ThreeDBackground() {
         const r = (1.2 + n.depth * 1.7) * pulse;
         const col = pal[n.color];
         ctx.fillStyle = rgba(col, 0.75);
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = rgba(col, 0.6);
         ctx.beginPath();
         ctx.arc(px[i], py[i], r, 0, Math.PI * 2);
         ctx.fill();
-        ctx.shadowBlur = 0;
       }
 
       /* Ambient dust at three depths. */
@@ -331,7 +399,8 @@ export default function ThreeDBackground() {
     return () => {
       running = false;
       cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', onScroll);
+      unsubscribeActivity();
+      _scrollEl.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
       document.removeEventListener('visibilitychange', onVisibility);
       themeObserver.disconnect();

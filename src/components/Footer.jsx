@@ -4,6 +4,8 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { SiGmail } from 'react-icons/si';
 
 import { footerLinks, siteConfig } from '../data/socials';
+import StarBorder from './StarBorder';
+import usePortfolioTheme from '../utils/usePortfolioTheme';
 import {
   Reveal,
   Stagger,
@@ -25,6 +27,7 @@ const ICON_BY_LABEL = {
 };
 
 export default function Footer() {
+  const theme = usePortfolioTheme();
   const year = new Date().getFullYear();
 
   return (
@@ -91,9 +94,16 @@ export default function Footer() {
           © {year} {siteConfig.name}
         </span>
 
-        <motion.a
+        <StarBorder
+          as={motion.a}
           href="#top"
           className="footer-top"
+          theme={theme}
+          radius={999}
+          hover="reveal"
+          borderColor="transparent"
+          backgroundColor="transparent"
+          glow={0.4}
           whileHover={{ y: -2 }}
           whileTap={tapSoft}
         >
@@ -101,7 +111,7 @@ export default function Footer() {
           <motion.span variants={hoverIconShift(0, -2)}>
             <ArrowUp size={12} aria-hidden="true" />
           </motion.span>
-        </motion.a>
+        </StarBorder>
       </Reveal>
     </footer>
   );

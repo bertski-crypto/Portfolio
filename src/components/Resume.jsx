@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { Download, FileText, ExternalLink, Check, X, ChevronDown } from 'lucide-react';
 
 import { siteConfig } from '../data/socials';
+import StarBorder from './StarBorder';
+import usePortfolioTheme from '../utils/usePortfolioTheme';
 import {
   Reveal,
   SectionHeader,
@@ -18,6 +20,7 @@ import {
 import '../styles/components/resume.css';
 
 export default function Resume() {
+  const theme = usePortfolioTheme();
   const hasResume = siteConfig.resumeExists;
   const resumePath = `/${siteConfig.resumeFileName}`;
 
@@ -46,29 +49,36 @@ export default function Resume() {
           {hasResume ? (
             <Stagger className="resume-actions" gap={0.08}>
               <StaggerItem className="resume-action">
-                <motion.a
+                <StarBorder
+                  as={motion.a}
                   href={resumePath}
                   download={siteConfig.resumeFileName}
                   className="btn btn-primary"
+                  theme={theme}
+                  color="#ffffff"
+                  radius={16}
                   whileHover={hoverPrimary}
                   whileTap={tapSoft}
                 >
                   <Download size={17} aria-hidden="true" />
                   DOWNLOAD RESUME
-                </motion.a>
+                </StarBorder>
               </StaggerItem>
               <StaggerItem className="resume-action">
-                <motion.a
+                <StarBorder
+                  as={motion.a}
                   href={resumePath}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-ghost"
+                  theme={theme}
+                  radius={16}
                   whileHover={hoverSecondary}
                   whileTap={tapSoft}
                 >
                   <ExternalLink size={17} aria-hidden="true" />
                   VIEW IN BROWSER
-                </motion.a>
+                </StarBorder>
               </StaggerItem>
             </Stagger>
           ) : (

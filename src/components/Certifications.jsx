@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { Award, ExternalLink, FileText } from 'lucide-react';
 
 import { getVerifiedCertifications } from '../data/certifications';
+import StarBorder from './StarBorder';
+import usePortfolioTheme from '../utils/usePortfolioTheme';
 import {
   Reveal,
   SectionHeader,
@@ -18,6 +20,7 @@ import {
 import '../styles/components/certifications.css';
 
 export default function Certifications() {
+  const theme = usePortfolioTheme();
   const certs = getVerifiedCertifications();
 
   return (
@@ -108,11 +111,15 @@ export default function Certifications() {
 
                 <div className="cert-footer">
                   {cert.file ? (
-                    <motion.a
+                    <StarBorder
+                      as={motion.a}
                       href={cert.file}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-primary cert-btn"
+                      theme={theme}
+                      color="#ffffff"
+                      radius={16}
                       aria-label={`View ${cert.name} certificate`}
                       whileHover={hoverPrimary}
                       whileTap={tapSoft}
@@ -122,17 +129,20 @@ export default function Certifications() {
                       <motion.span variants={hoverIconShift(4)}>
                         <ExternalLink size={14} aria-hidden="true" />
                       </motion.span>
-                    </motion.a>
+                    </StarBorder>
                   ) : (
-                    <button
+                    <StarBorder
                       type="button"
                       className="btn btn-ghost cert-btn"
+                      theme={theme}
+                      radius={16}
+                      hover="reveal"
                       disabled
                       aria-label="Certificate PDF not yet available"
                     >
                       <FileText size={16} aria-hidden="true" />
                       ADD CERTIFICATE PDF
-                    </button>
+                    </StarBorder>
                   )}
                 </div>
               </motion.article>

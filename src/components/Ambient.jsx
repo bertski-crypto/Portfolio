@@ -1,10 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 import {
   EASE,
-  orbDrift,
-  particleDrift,
   useHasFinePointer,
   useIsDesktop,
   useReduced,
@@ -50,10 +48,13 @@ function ParticleField() {
 
   if (reduced || count === 0) return null;
 
+  /* CSS keyframes per particle: composited on the GPU, zero main-thread
+     work. The old framer-motion variants animated 28 elements via JS on
+     every frame, forever. Duration/delay stay per-particle and inline. */
   return (
     <div className="ambient-particles" aria-hidden="true">
       {particles.map((p) => (
-        <motion.span
+        <span
           key={p.id}
           className="ambient-particle"
           style={{
@@ -62,11 +63,9 @@ function ParticleField() {
             width: p.size,
             height: p.size,
             opacity: p.opacity,
+            animationDuration: `${p.duration}s`,
+            animationDelay: `${p.delay}s`,
           }}
-          variants={particleDrift(p.duration)}
-          initial="hidden"
-          animate="animate"
-          transition={{ delay: p.delay, duration: p.duration, ease: EASE.inOut, repeat: Infinity }}
         />
       ))}
     </div>
@@ -111,35 +110,21 @@ function CursorLight() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Drifting orbs — replaces the old CSS keyframes so each            */
-/*  orb gets its own duration / direction / delay.                    */
+/*  Drifting orbs — pure CSS keyframes (GPU-composited, no JS loop,   */
+/*  no framer-motion per-frame style writes).                          */
 /* ------------------------------------------------------------------ */
 const ORBS = [
-  { cls: 'ambient-blob--a', dx: 26, dy: 18, duration: 19, delay: 0 },
-  { cls: 'ambient-blob--b', dx: -22, dy: 24, duration: 24, delay: -6 },
-  { cls: 'ambient-blob--c', dx: 18, dy: -16, duration: 29, delay: -13 },
+  { cls: 'ambient-blob--a' },
+  { cls: 'ambient-blob--b' },
+  { cls: 'ambient-blob--c' },
 ];
 
 function Orbs() {
-  const reduced = useReduced();
-
   return (
     <>
-      {ORBS.map((orb) =>
-        reduced ? (
-          <div key={orb.cls} className={`ambient-blob ${orb.cls}`} aria-hidden="true" />
-        ) : (
-          <motion.div
-            key={orb.cls}
-            className={`ambient-blob ${orb.cls}`}
-            aria-hidden="true"
-            variants={orbDrift(orb.dx, orb.dy, orb.duration)}
-            initial="hidden"
-            animate="animate"
-            transition={{ delay: orb.delay, duration: orb.duration, ease: EASE.inOut, repeat: Infinity }}
-          />
-        ),
-      )}
+      {ORBS.map((orb) => (
+        <div key={orb.cls} className={`ambient-blob ${orb.cls}`} aria-hidden="true" />
+      ))}
     </>
   );
 }
@@ -148,35 +133,9 @@ function Orbs() {
 /*  Public component                                                    */
 /* ------------------------------------------------------------------ */
 export default function Ambient() {
-  const reduced = useReduced();
-  const gridRef = useRef(null);
-  const isDesktop = useIsDesktop(1024);
-
-  // very slow grid drift, desktop only
-  const gridX = useMotionValue(0);
-  const gridY = useMotionValue(0);
-
-  useEffect(() => {
-    if (reduced || !isDesktop) return;
-    let raf = 0;
-    const t0 = performance.now();
-    const tick = (t) => {
-      const e = (t - t0) / 1000;
-      gridX.set(Math.sin(e / 26) * 26);
-      gridY.set(Math.cos(e / 31) * 20);
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [reduced, isDesktop, gridX, gridY]);
-
   return (
     <div className="ambient-layer" aria-hidden="true">
-      <motion.div
-        ref={gridRef}
-        className="ambient-grid"
-        style={reduced ? undefined : { x: gridX, y: gridY }}
-      />
+      <div className="ambient-grid" aria-hidden="true" />
       <Orbs />
       <ParticleField />
       <CursorLight />

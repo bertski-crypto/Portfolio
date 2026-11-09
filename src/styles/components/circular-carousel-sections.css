@@ -1,0 +1,121 @@
+/* ==========================================================================
+   CIRCULAR CAROUSEL — SECTION INTEGRATION
+   Keeps the exact React Bits component untouched and only adapts the block
+   around it to the portfolio's spacing, type, and theme.
+   ========================================================================== */
+
+.section-carousel-block {
+  margin-bottom: var(--sp-6);
+}
+
+.labs .section-carousel-block {
+  margin-bottom: 0;
+}
+
+.section-carousel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+
+.section-carousel__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+.section-carousel__hint {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-align: right;
+}
+
+.section-carousel {
+  position: relative;
+  width: 100%;
+  height: clamp(520px, 52vw, 680px);
+  isolation: isolate;
+}
+
+.section-carousel::before {
+  content: '';
+  position: absolute;
+  inset: 12% 6%;
+  background: radial-gradient(closest-side, var(--accent-soft), transparent 72%);
+  filter: blur(28px);
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section-carousel__widget {
+  position: relative;
+  z-index: 1;
+}
+
+.section-carousel .circular-carousel__caption {
+  bottom: 16px;
+}
+
+.section-carousel .circular-carousel__title {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.1vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.section-carousel .circular-carousel__subtitle {
+  margin-top: 4px;
+  font-size: clamp(10px, 0.85vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  opacity: 0.65;
+}
+
+.section-carousel .circular-carousel__count {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 0.9vw, 13px);
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 768px) {
+  .section-carousel__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .section-carousel__hint {
+    text-align: left;
+  }
+
+  .section-carousel {
+    height: 440px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-carousel {
+    height: 380px;
+  }
+
+  .section-carousel .circular-carousel__title {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-carousel::before {
+    filter: none;
+    opacity: 0.4;
+  }
+}

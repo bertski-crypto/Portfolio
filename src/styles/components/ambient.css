@@ -13,11 +13,20 @@
   overflow: hidden;
 }
 
-/* ---------- grid ---------- */
+/* ---------- grid ----------
+   Slow drift via composited CSS keyframes instead of a JS rAF loop
+   writing motionValues 160x/s for a sub-pixel movement. */
 .ambient-layer .ambient-grid {
   position: absolute;
   inset: -40px;
   opacity: 0.5;
+  will-change: transform;
+  animation: ambient-grid-drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-grid-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(24px, -16px, 0); }
 }
 
 /* ---------- orbs ---------- */
@@ -26,6 +35,7 @@
   border-radius: 50%;
   filter: blur(120px);
   will-change: transform;
+  animation: ambient-orb-drift 22s ease-in-out infinite alternate;
 }
 
 .ambient-blob--a {
@@ -34,6 +44,7 @@
   top: 8%;
   left: -120px;
   background: var(--ambient-a);
+  animation-duration: 19s;
 }
 
 .ambient-blob--b {
@@ -42,6 +53,8 @@
   bottom: 4%;
   right: -100px;
   background: var(--ambient-b);
+  animation-duration: 24s;
+  animation-delay: -6s;
 }
 
 .ambient-blob--c {
@@ -51,6 +64,13 @@
   left: 45%;
   background: var(--ambient-c);
   opacity: 0.4;
+  animation-duration: 29s;
+  animation-delay: -13s;
+}
+
+@keyframes ambient-orb-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(26px, -18px, 0) scale(1.04); }
 }
 
 /* ---------- particles ---------- */
@@ -65,6 +85,12 @@
   background: var(--accent);
   box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 40%, transparent);
   will-change: transform;
+  animation: ambient-particle-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-particle-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(6px, -18px, 0); }
 }
 
 /* ---------- cursor light ---------- */
@@ -111,6 +137,17 @@
   );
   transform: translateX(-100%);
   will-change: transform;
+}
+
+/* ---------- idle settle ----------
+   After a quiet spell (see background-activity.js) the fixed layers
+   pause. A static backdrop lets every `backdrop-filter` glass surface
+   reuse its cached blur instead of re-blurring each frame. Any scroll,
+   pointer or key activity resumes instantly. */
+:root[data-bg-settled] .ambient-grid,
+:root[data-bg-settled] .ambient-blob,
+:root[data-bg-settled] .ambient-particle {
+  animation-play-state: paused;
 }
 
 /* ---------- reduced motion ---------- */

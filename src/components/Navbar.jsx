@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon, Download } from 'lucide-react';
 
 import { hoverSoft, tapSoft, useReduced } from '../utils/motion-primitives';
+import StarBorder from './StarBorder';
 import '../styles/components/navbar.css';
 
 const navItems = [
@@ -23,17 +24,25 @@ export default function Navbar({ theme, onThemeToggle, activeSection }) {
   const reduced = useReduced();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    const main = document.getElementById('top');
+    if (!main) return;
+    const onScroll = () => setScrolled(main.scrollTop > 16);
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    main.addEventListener('scroll', onScroll, { passive: true });
+    return () => main.removeEventListener('scroll', onScroll);
   }, []);
 
-  // lock body scroll while the mobile drawer is open
+  // lock page scroll while the mobile drawer is open (the scroll root is
+  // <main>, not <body>, so both are locked)
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
+    if (!open) return undefined;
+    const scroller = document.getElementById('top');
+    const prevOverflow = scroller ? scroller.style.overflow : '';
+    document.body.style.overflow = 'hidden';
+    if (scroller) scroller.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
+      if (scroller) scroller.style.overflow = prevOverflow;
     };
   }, [open]);
 
@@ -128,9 +137,13 @@ export default function Navbar({ theme, onThemeToggle, activeSection }) {
 
         {/* ---------------- actions ---------------- */}
         <div className="navbar-actions">
-          <motion.button
+          <StarBorder
+            as={motion.button}
             type="button"
             className="navbar-btn"
+            theme={theme}
+            radius={999}
+            hover="reveal"
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             onClick={onThemeToggle}
             whileHover={hoverSoft}
@@ -152,11 +165,15 @@ export default function Navbar({ theme, onThemeToggle, activeSection }) {
                 )}
               </motion.span>
             </AnimatePresence>
-          </motion.button>
+          </StarBorder>
 
-          <motion.button
+          <StarBorder
+            as={motion.button}
             type="button"
             className="navbar-btn navbar-menu-btn"
+            theme={theme}
+            radius={999}
+            hover="reveal"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="primary-nav"
@@ -176,7 +193,7 @@ export default function Navbar({ theme, onThemeToggle, activeSection }) {
                 {open ? <X size={22} /> : <Menu size={22} />}
               </motion.span>
             </AnimatePresence>
-          </motion.button>
+          </StarBorder>
         </div>
       </div>
 

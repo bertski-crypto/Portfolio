@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, Download, FileText } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
@@ -9,23 +8,19 @@ import profileWebp from '../assets/images/albert-profile.webp';
 import profileJpg from '../assets/images/albert-profile.jpg';
 
 import HeroNetwork from './HeroNetwork';
+import ReflectiveCard from './ReflectiveCard';
+import StarBorder from './StarBorder';
 import {
   EASE,
-  floatLoop,
   heroStep,
   hoverIconShift,
   hoverPrimary,
-  hoverProfile,
   hoverSecondary,
   hoverSocial,
-  hoverZoom,
   tapSoft,
 } from '../utils/motion';
-import {
-  useIsDesktop,
-  usePointerParallax,
-  useReduced,
-} from '../utils/motion-primitives';
+import { useReduced } from '../utils/motion-primitives';
+import usePortfolioTheme from '../utils/usePortfolioTheme';
 
 import '../styles/components/hero.css';
 
@@ -39,69 +34,9 @@ const socialIcons = { FaGithub, FaLinkedin, SiGmail };
 const heroWords = siteConfig.heroIntro.replace(/\.+$/, '').split(/\s+/);
 const heroPeriod = siteConfig.heroIntro.match(/\.+$/)?.[0] ?? '';
 
-/* Motes drifting across the portrait. Kept deliberately sparse so the
-   photo stays readable. */
-const MOTE_COUNT = 18;
-
-/** Deterministic pseudo-random so the build never mismatches. */
-function makeRandom(seed) {
-  let s = seed;
-  return () => {
-    s = (s * 1664525 + 1013904223) % 4294967296;
-    return s / 4294967296;
-  };
-}
-
-function HeroMotes() {
-  const reduced = useReduced();
-
-  const motes = useMemo(() => {
-    const rand = makeRandom(20261002); // stable seed
-    return Array.from({ length: MOTE_COUNT }, (_, i) => ({
-      id: i,
-      left: 5 + rand() * 90,
-      top: 5 + rand() * 90,
-      size: 1 + rand() * 2.4,
-      opacity: 0.18 + rand() * 0.42,
-      duration: 9 + rand() * 12,
-      delay: -rand() * 16,
-      drift: 10 + rand() * 18,
-    }));
-  }, []);
-
-  if (reduced) return null;
-
-  return (
-    <div className="hero-motes" aria-hidden="true">
-      {motes.map((m) => (
-        <motion.span
-          key={m.id}
-          className="hero-mote"
-          style={{
-            left: `${m.left}%`,
-            top: `${m.top}%`,
-            width: m.size,
-            height: m.size,
-            opacity: m.opacity,
-          }}
-          animate={{ x: [0, m.drift * 0.35, 0], y: [0, -m.drift, 0] }}
-          transition={{
-            duration: m.duration,
-            delay: m.delay,
-            ease: EASE.inOut,
-            repeat: Infinity,
-            repeatType: 'loop',
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 export default function Hero() {
   const reduced = useReduced();
-  const isDesktop = useIsDesktop(1024);
-  const { x: px, y: py, setX, setY } = usePointerParallax(3);
+  const theme = usePortfolioTheme();
 
   const hasResume = siteConfig.resumeExists;
   const resumePath = `/${siteConfig.resumeFileName}`;
@@ -125,38 +60,16 @@ export default function Hero() {
     : { href: '#contact', label: 'REQUEST RESUME', Icon: FileText };
   const ResumeIcon = resumeCta.Icon;
 
-  const onMove = (e) => {
-    if (!isDesktop) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    setX(((e.clientX - r.left) / r.width) * 2 - 1);
-    setY(((e.clientY - r.top) / r.height) * 2 - 1);
-  };
-
   return (
     <section className="hero section-wrap" aria-labelledby="hero-heading" id="top">
       <div className="hero-container">
         {/* ------------------------------- TEXT COLUMN ------------------- */}
-        <div className="hero-content" onPointerMove={onMove}>
+        <div className="hero-content">
           <motion.div className="hero-eyebrow" {...enter(0.0, 14)}>
-            {!reduced && (
-              <motion.span
-                className="status-dot"
-                aria-hidden="true"
-                animate={{
-                  boxShadow: [
-                    '0 0 0 3px rgba(77,163,255,0.18)',
-                    '0 0 0 7px rgba(77,163,255,0.30)',
-                    '0 0 0 3px rgba(77,163,255,0.18)',
-                  ],
-                }}
-                transition={{
-                  duration: 2.4,
-                  repeat: Infinity,
-                  ease: EASE.inOut,
-                }}
-              />
-            )}
-            {reduced && <span className="status-dot" aria-hidden="true" />}
+            {/* The dot pulses via the shared composited CSS animation
+                (opacity/scale). The old framer-motion boxShadow loop
+                repainted the shadow on the CPU every frame forever. */}
+            <span className="status-dot" aria-hidden="true" />
             <span>{siteConfig.availabilityStatus}</span>
           </motion.div>
 
@@ -185,9 +98,13 @@ export default function Hero() {
           </motion.p>
 
           <motion.div className="hero-actions" {...enter(0.36, 16)}>
-            <motion.a
+            <StarBorder
+              as={motion.a}
               href="#projects"
               className="btn btn-primary"
+              theme={theme}
+              color="#ffffff"
+              radius={16}
               whileHover={hov(hoverPrimary)}
               whileTap={hov(tapSoft)}
             >
@@ -195,17 +112,20 @@ export default function Hero() {
               <motion.span variants={hov(hoverIconShift(4))}>
                 <ArrowUpRight size={16} aria-hidden="true" />
               </motion.span>
-            </motion.a>
+            </StarBorder>
 
-            <motion.a
+            <StarBorder
+              as={motion.a}
               href={resumeCta.href}
               className="btn btn-ghost"
+              theme={theme}
+              radius={16}
               whileHover={hov(hoverSecondary)}
               whileTap={hov(tapSoft)}
               {...(resumeCta.download ? { download: resumeCta.download } : {})}
             >
               <ResumeIcon size={15} aria-hidden="true" /> {resumeCta.label}
-            </motion.a>
+            </StarBorder>
           </motion.div>
 
           <motion.div
@@ -218,10 +138,15 @@ export default function Hero() {
               ({ label, icon: IconName, href, external, ariaLabel }, i) => {
                 const Icon = socialIcons[IconName];
                 return (
-                  <motion.a
+                  <StarBorder
+                    as={motion.a}
                     key={label}
                     href={href}
                     className="social-btn"
+                    theme={theme}
+                    radius={16}
+                    hover="reveal"
+                    glow={0.5}
                     aria-label={ariaLabel}
                     role="listitem"
                     initial={reduced ? false : { opacity: 0, scale: 0.9 }}
@@ -238,7 +163,7 @@ export default function Hero() {
                       : {})}
                   >
                     <Icon size={18} aria-hidden="true" />
-                  </motion.a>
+                  </StarBorder>
                 );
               },
             )}
@@ -250,44 +175,29 @@ export default function Hero() {
           <div className="hero-stage">
             <HeroNetwork />
 
-            <motion.div
-              className="profile-frame"
-              style={isDesktop ? { x: px, y: py } : undefined}
-              {...(reduced
-                ? {}
-                : { variants: floatLoop, initial: 'hidden', animate: 'animate' })}
-              whileHover={hov(hoverProfile)}
-            >
-              <picture>
-                <source srcSet={profileWebp} type="image/webp" />
-                <motion.img
-                  src={profileJpg}
-                  alt="Professional portrait of Albert"
-                  loading="eager"
-                  decoding="async"
-                  width="610"
-                  height="714"
-                  whileHover={hov(hoverZoom(1.02))}
-                />
-              </picture>
-
-              <HeroMotes />
-
-              {/* slow diagonal light sweep across the glass */}
-              {!reduced && (
-                <motion.div
-                  className="glass-reflection"
-                  initial={{ x: '-110%' }}
-                  animate={{ x: ['-110%', '110%'] }}
-                  transition={{
-                    duration: 7.5,
-                    ease: EASE.inOut,
-                    repeat: Infinity,
-                    repeatDelay: 4,
-                  }}
-                />
-              )}
-            </motion.div>
+            <ReflectiveCard
+              name={siteConfig.name}
+              role={siteConfig.title}
+              avatar={profileJpg}
+              avatarWebp={profileWebp}
+              avatarAlt="Professional portrait of Albert"
+              badge="VERIFIED"
+              status={siteConfig.availabilityStatus ? siteConfig.availabilityStatus.split(' ')[0] : 'ACTIVE'}
+              statusColor="#22c55e"
+              idLabel="SPECIALIZATION"
+              idValue="IT & NETWORK SOLUTIONS"
+              theme={theme === 'light' ? 'light' : 'dark'}
+              tint="#ffffff"
+              metalness={0.9}
+              roughness={0.3}
+              blurStrength={6}
+              shine={1}
+              glare={0.5}
+              width={350}
+              height={500}
+              radius={24}
+              className="hero-reflective-card"
+            />
           </div>
 
           <motion.div

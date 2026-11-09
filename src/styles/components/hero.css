@@ -152,13 +152,20 @@
   min-width: 0;
 }
 
-/* Network graphic + portrait, side by side. The graphic tucks slightly
-   under the portrait's left edge for depth. */
+/* Network graphic + reflective card, side by side. The graphic tucks slightly
+   under the card's left edge for depth. */
 .hero-stage {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   width: 100%;
+}
+
+.hero-reflective-card {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
 }
 
 .profile-frame {
@@ -241,7 +248,7 @@
   backdrop-filter: blur(16px);
   text-align: center;
   width: 100%;
-  max-width: 610px;
+  max-width: 350px;
   box-sizing: border-box;
   flex-shrink: 0;
 }
@@ -345,7 +352,13 @@
     align-items: center;
   }
 
-  .profile-frame { max-width: 100%; }
+  .hero-stage {
+    justify-content: center;
+  }
+
+  .hero-reflective-card {
+    max-width: 100%;
+  }
 
   .hero-status { margin: 0 auto; }
 }

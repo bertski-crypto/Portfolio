@@ -1,0 +1,310 @@
+/* ==========================================================================
+   STARBORDER INTEGRATION
+   StarBorder supplies the moving light. These rules keep the existing
+   portfolio button sizes, surfaces, typography and states intact.
+   ========================================================================== */
+
+.star-border.btn,
+.star-border.navbar-btn,
+.star-border.social-btn,
+.star-border.project-link,
+.star-border.modal-close,
+.star-border.search-clear,
+.star-border.filter-toggle,
+.star-border.filter-option,
+.star-border.contact-email,
+.star-border.footer-top {
+  margin: 0;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- CTA buttons ---------- */
+.star-border.btn {
+  height: 44px;
+  padding: 0 var(--sp-4);
+  gap: var(--sp-2);
+  border: 0;
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.star-border.btn-primary {
+  background: var(--accent-grad);
+  color: #07090c;
+  box-shadow: var(--glow);
+}
+
+.star-border.btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 0 0 1px rgba(77, 163, 255, 0.28), 0 22px 52px rgba(77, 163, 255, 0.16);
+}
+
+:root[data-theme='light'] .star-border.btn-primary {
+  color: #ffffff;
+}
+
+.star-border.btn-ghost {
+  background: var(--glass-secondary);
+  color: var(--text);
+  backdrop-filter: blur(12px);
+}
+
+.star-border.btn-ghost:hover {
+  background: var(--glass-primary);
+}
+
+.star-border.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Certifications keeps its own primary treatment. */
+.star-border.btn-primary.cert-btn {
+  background: var(--accent-grad);
+  color: #07090c;
+  box-shadow: var(--glow);
+}
+
+.star-border.btn-primary.cert-btn:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 0 0 1px rgba(77, 163, 255, 0.28), 0 22px 52px rgba(77, 163, 255, 0.16);
+}
+
+:root[data-theme='light'] .star-border.btn-primary.cert-btn {
+  color: #ffffff;
+}
+
+/* ---------- Navbar icon buttons ---------- */
+.star-border.navbar-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  gap: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--glass-secondary);
+  color: var(--text);
+  backdrop-filter: blur(12px);
+}
+
+.star-border.navbar-btn:hover {
+  background: var(--glass-primary);
+  color: var(--accent);
+}
+
+.star-border.navbar-menu-btn {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .star-border.navbar-menu-btn {
+    display: grid;
+  }
+}
+
+/* ---------- Hero social buttons ---------- */
+.star-border.social-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  gap: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--glass-secondary);
+  color: var(--muted);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+
+.star-border.social-btn:hover {
+  background: var(--glass-primary);
+  color: var(--accent);
+}
+
+/* ---------- Project card action buttons ---------- */
+.star-border.project-link {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  gap: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--glass-secondary);
+  color: var(--muted);
+}
+
+.star-border.project-link:hover {
+  background: var(--glass-primary);
+  color: var(--accent);
+}
+
+/* ---------- Project modal ---------- */
+.star-border.modal-close {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  gap: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--glass-secondary);
+  color: var(--muted);
+}
+
+.star-border.modal-close:hover {
+  background: var(--glass-primary);
+  color: var(--text);
+}
+
+/* ---------- Project search + filters ---------- */
+.star-border.search-clear {
+  position: absolute;
+  top: calc(50% - 13px);
+  right: 12px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  gap: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--muted);
+  transform: none;
+}
+
+.star-border.search-clear:hover {
+  color: var(--text);
+}
+
+.star-border.filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: 44px;
+  padding: 0 var(--sp-4);
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--glass-secondary);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  backdrop-filter: blur(12px);
+}
+
+.star-border.filter-toggle:hover,
+.star-border.filter-toggle[aria-expanded='true'] {
+  background: var(--glass-primary);
+  color: var(--accent);
+}
+
+.star-border.filter-option {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  gap: 0;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: left;
+}
+
+.star-border.filter-option:hover {
+  background: var(--glass-secondary);
+  color: var(--text);
+}
+
+.star-border.filter-option.is-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ---------- Contact email ---------- */
+.star-border.contact-email {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: fit-content;
+  padding: var(--sp-3) var(--sp-4);
+  border: 0;
+  border-radius: var(--r-lg);
+  background: var(--glass-secondary);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.star-border.contact-email:hover {
+  background: var(--glass-primary);
+}
+
+.star-border.contact-email svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ---------- Footer back-to-top ---------- */
+.star-border.footer-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text);
+  font-weight: 500;
+  line-height: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.star-border.footer-top:hover {
+  color: var(--accent);
+}
+
+.star-border.footer-top > span {
+  display: inline-flex;
+}
+
+/* Transparent tracks still need a visible keyboard focus ring. */
+.star-border.search-clear:focus-visible,
+.star-border.filter-option:focus-visible,
+.star-border.footer-top:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

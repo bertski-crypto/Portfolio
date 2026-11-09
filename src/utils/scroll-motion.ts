@@ -315,7 +315,8 @@ function ensureListening() {
   if (listening) return;
   listening = true;
 
-  window.addEventListener('scroll', schedule, { passive: true });
+  const _snap = document.getElementById('top') || window;
+  (_snap as EventTarget).addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule, { passive: true });
 
   // If the OS motion preference flips on mid-session, drop every offset.

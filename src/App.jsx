@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Ambient from './components/Ambient';
 import ThreeDBackground from './components/ThreeDBackground';
 import ScrollProgress from './components/ScrollProgress';
@@ -15,8 +15,10 @@ import CurrentlyLearning from './components/CurrentlyLearning';
 import Resume from './components/Resume';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import { ScrollContext } from './context/ScrollContext';
 
 const sectionIds = [
+  'top',
   'about',
   'projects',
   'labs',
@@ -31,8 +33,8 @@ const sectionIds = [
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('portfolio-theme') || 'dark');
-  const [activeSection, setActiveSection] = useState('about');
-  const observerRef = useRef(null);
+  const [activeSection, setActiveSection] = useState('top');
+  const mainRef = useRef(null);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -40,6 +42,9 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
+    const root = mainRef.current;
+    if (!root) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -49,6 +54,7 @@ export default function App() {
         });
       },
       {
+        root,
         rootMargin: '-20% 0px -60% 0px',
         threshold: 0.1,
       }
@@ -59,44 +65,37 @@ export default function App() {
       if (element) observer.observe(element);
     });
 
-    observerRef.current = observer;
     return () => observer.disconnect();
   }, []);
 
-  const scrollToSection = useCallback((id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
-
   return (
-    <div className="site-shell">
-      <ThreeDBackground />
-      <Ambient />
-      <ScrollProgress />
+    <ScrollContext.Provider value={mainRef}>
+      <div className="site-shell">
+        <ThreeDBackground />
+        <Ambient />
+        <ScrollProgress />
 
-      <Navbar
-        theme={theme}
-        onThemeToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        activeSection={activeSection}
-      />
+        <Navbar
+          theme={theme}
+          onThemeToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          activeSection={activeSection}
+        />
 
-      <main id="top">
-        <Hero />
-        <About />
-        <Projects />
-        <NetworkingLabs />
-        <Skills />
-        <Certifications />
-        <Experience />
-        <Education />
-        <CurrentlyLearning />
-        <Resume />
-        <Contact />
-      </main>
-
-      <Footer />
-    </div>
+        <main id="top" ref={mainRef} className="snap-container">
+          <Hero />
+          <About />
+          <Projects />
+          <NetworkingLabs />
+          <Skills />
+          <Certifications />
+          <Experience />
+          <Education />
+          <CurrentlyLearning />
+          <Resume />
+          <Contact />
+          <Footer />
+        </main>
+      </div>
+    </ScrollContext.Provider>
   );
 }

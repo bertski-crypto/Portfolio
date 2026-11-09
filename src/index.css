@@ -19,6 +19,8 @@
 @import './styles/components/resume.css';
 @import './styles/components/contact.css';
 @import './styles/components/footer.css';
+@import './styles/components/star-border-buttons.css';
+@import './styles/components/circular-carousel-sections.css';
 
 /* ==========================================================================
    SITE SHELL
