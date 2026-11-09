@@ -21,7 +21,7 @@ import {
   SiVscodium,
 } from 'react-icons/si';
 
-import { skillGroups, toolIcons } from '../data/skills';
+import { skillGroups } from '../data/skills';
 import LogoLoop from './LogoLoop';
 import {
   Reveal,
@@ -42,22 +42,6 @@ import '../styles/components/skills.css';
 import '../styles/components/bento.css';
 
 const skillIcons = { Wrench, Network, Code2, Terminal, Container };
-
-/* ------------------------------------------------------------------ */
-/*  Tool chip                                                          */
-/* ------------------------------------------------------------------ */
-function ToolTag({ tool }) {
-  return (
-    <motion.span
-      className="tool-tag"
-      role="listitem"
-      whileHover={hoverSoft}
-      whileTap={tapSoft}
-    >
-      {tool.name}
-    </motion.span>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  Skill category card                                                */
@@ -124,17 +108,12 @@ export default function Skills() {
       </SectionHeader>
 
       <Stagger className="skills-bento" gap={0.1}>
-        {/* tools card — spans full width */}
+        {/* tech stack loop — spans full width */}
         <StaggerItem
-          className="skill-category skill-category--tools glass-card"
+          className="skill-card-slot"
           parallax
           parallaxIndex={0}
         >
-          <div className="tools-header">
-            <h3>Development Environment</h3>
-            <p>Daily drivers for development and learning</p>
-          </div>
-
           <div className="techstack-loop" style={{ marginTop: 24 }}>
             <LogoLoop
               logos={[
