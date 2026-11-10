@@ -69,7 +69,7 @@ const project = (m, depth, px, py) => {
   return [(m[0] * px + m[1] * py) * k, (m[3] * px + m[4] * py) * k];
 };
 
-const createEngine = (root, track, config, setLayout) => {
+const createEngine = (root, track, config) => {
   const query = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
   const st = {
     offset: 0,
@@ -84,7 +84,7 @@ const createEngine = (root, track, config, setLayout) => {
     sizeMax: 0,
     tipMax: 0,
     geo: null,
-    layout: { copies: 2, primary: 0 },
+    layout: { copies: 3, primary: 1 },
     hovered: false,
     focused: false,
     pointer: null,
@@ -262,10 +262,7 @@ const createEngine = (root, track, config, setLayout) => {
     root.style.setProperty('--logoloop-pad', `${Math.ceil(pad)}px`);
     root.style.perspective = geo.tilted ? `${geo.persp}px` : '';
     track.style.transformOrigin = geo.tilted ? (cfg.vertical ? `50% ${L / 2}px` : `${L / 2}px 50%`) : '';
-    if (copies !== st.layout.copies || primary !== st.layout.primary) {
-      st.layout = { copies, primary };
-      setLayout(st.layout);
-    }
+    st.layout = { copies, primary };
   };
 
   const measure = () => {
@@ -934,7 +931,7 @@ export const LogoLoop = memo(
     };
 
     useIsomorphicLayoutEffect(() => {
-      const engine = createEngine(rootRef.current, trackRef.current, config, setLayout);
+      const engine = createEngine(rootRef.current, trackRef.current, config);
       engineRef.current = engine;
       return () => {
         engine.destroy();
@@ -943,10 +940,18 @@ export const LogoLoop = memo(
     }, []);
 
     useIsomorphicLayoutEffect(() => {
-      engineRef.current?.refresh();
+      const engine = engineRef.current;
+      engine?.refresh();
+      const { copies: computedCopies, primary: computedPrimary } = engine?.state.layout ?? {
+        copies: 3,
+        primary: 1
+      };
+      setLayout(prev =>
+        prev.copies !== computedCopies || prev.primary !== computedPrimary
+          ? { copies: computedCopies, primary: computedPrimary }
+          : prev
+      );
     }, [
-      copies,
-      primary,
       logos,
       vertical,
       logoHeight,
