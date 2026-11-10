@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-import { Wrench, Network, Code2, Terminal, Container } from 'lucide-react';
 import {
   SiHtml5,
   SiCss,
@@ -21,77 +19,18 @@ import {
   SiVscodium,
 } from 'react-icons/si';
 
-import { skillGroups } from '../data/skills';
 import LogoLoop from './LogoLoop';
 import {
   Reveal,
-  DUR,
-  EASE,
   SectionHeader,
   SectionTitle,
   Stagger,
   StaggerItem,
-  hoverCardSoft,
-  hoverIconPop,
-  hoverSoft,
-  tapSoft,
-  useReduced,
 } from '../utils/motion-primitives';
 
 import '../styles/components/skills.css';
 import '../styles/components/bento.css';
 
-const skillIcons = { Wrench, Network, Code2, Terminal, Container };
-
-/* ------------------------------------------------------------------ */
-/*  Skill category card                                                */
-/* ------------------------------------------------------------------ */
-function SkillCategory({ group }) {
-  const Icon = skillIcons[group.icon] || Code2;
-  const reduced = useReduced();
-
-  // The icon inherits the card's reveal label, so it settles a beat
-  // after the card itself rather than arriving with it.
-  const iconReveal = reduced
-    ? undefined
-    : {
-        hidden: { scale: 0.97 },
-        show: {
-          scale: 1,
-          transition: { duration: DUR.fast, delay: 0.12, ease: EASE.out },
-        },
-      };
-
-  return (
-    <article className="skill-category">
-      <h4>
-        <motion.span
-          className="skill-icon"
-          aria-hidden="true"
-          variants={iconReveal}
-          whileHover={hoverIconPop(1.08, -2)}
-        >
-          <Icon size={16} />
-        </motion.span>
-        {group.label}
-      </h4>
-
-      <ul>
-        {group.items.map((item) => (
-          <motion.li key={item} whileHover={hoverSoft} whileTap={tapSoft}>
-            {item}
-          </motion.li>
-        ))}
-      </ul>
-
-      <p className="skill-level">{group.level}</p>
-    </article>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Section                                                            */
-/* ------------------------------------------------------------------ */
 export default function Skills() {
   return (
     <section id="skills" className="skills section-wrap" aria-labelledby="skills-heading">
@@ -147,24 +86,6 @@ export default function Skills() {
             />
           </div>
         </StaggerItem>
-
-        {/* skill groups */}
-        {skillGroups.map((group, i) => (
-          <StaggerItem
-            key={group.label}
-            className="skill-card-slot"
-            parallax
-            parallaxIndex={i}
-          >
-            <motion.div
-              className="skill-card-hover"
-              whileHover={hoverCardSoft}
-              whileTap={tapSoft}
-            >
-              <SkillCategory group={group} />
-            </motion.div>
-          </StaggerItem>
-        ))}
       </Stagger>
     </section>
   );
