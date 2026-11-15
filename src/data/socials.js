@@ -12,7 +12,7 @@ export const socialLinks = [
     id: 'linkedin',
     label: 'LinkedIn Profile',
     icon: 'FaLinkedin',
-    href: 'https://www.linkedin.com/in/YOUR_USERNAME',
+    href: 'https://www.linkedin.com/in/albert-beato-b771603a7',
     external: true,
     ariaLabel: 'LinkedIn profile',
     showArrow: true,
@@ -30,7 +30,7 @@ export const socialLinks = [
 
 export const footerLinks = [
   { label: 'GitHub', href: 'https://github.com/bertski-crypto', external: true },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/YOUR_USERNAME', external: true },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/albert-beato-b771603a7', external: true },
   { label: 'Email', href: 'mailto:beato3727@gmail.com', external: false },
 ];
 

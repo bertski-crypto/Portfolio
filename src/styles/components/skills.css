@@ -6,6 +6,16 @@
   padding: var(--sp-8) 0;
 }
 
+/* ---------- standalone logo loop strip (no card border/background) ---------- */
+.skills-loop-strip {
+  position: relative;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: var(--sp-3) auto var(--sp-6);
+  padding: var(--sp-2) 0;
+  overflow: hidden;
+}
+
 /* ---------- bento grid ---------- */
 .skills-bento {
   display: grid;
@@ -18,7 +28,13 @@
 }
 
 .skill-card-slot {
-  grid-column: span 4;
+  grid-column: span 6;
+  display: flex;
+  min-width: 0;
+}
+
+.skill-card-slot--wide {
+  grid-column: span 6;
   display: flex;
   min-width: 0;
 }
@@ -34,14 +50,22 @@
   width: 100%;
 }
 
+.techstack-loop {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
 @media (max-width: 1199px) {
-  .skill-card-slot { grid-column: span 6; }
+  .skill-card-slot,
+  .skill-card-slot--wide { grid-column: span 6; }
 }
 
 @media (max-width: 768px) {
   .skills-bento { grid-template-columns: 1fr; }
   .skill-category--tools,
-  .skill-card-slot { grid-column: span 1; }
+  .skill-card-slot,
+  .skill-card-slot--wide { grid-column: span 1; }
 }
 
 /* ---------- card surface ---------- */
